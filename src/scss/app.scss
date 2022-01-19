@@ -16,6 +16,11 @@ body {
 }
 
 .page__wrapper {
+    position: relative;
+    display: flex;
+
+    min-height: 100vh;
+    height: 100%;
     width: 100%;
     max-width: 1920px;
     margin: 0 auto;
@@ -25,7 +30,7 @@ body {
 .text,
 .title {
     width: 100%;
-    font-size: 19px;
+    font-size: 20px;
     text-align: center;
     font-weight: 500;
     margin-bottom: 8px;
@@ -42,8 +47,13 @@ body {
 .title {
     user-select: text;
     margin-bottom: 16px;
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 700;
 }
 
-@import './components/navbar';
+.tal {
+    text-align: left;
+}
+
+@import './components/Navbar';
+@import './components/QuizList';

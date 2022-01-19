@@ -1,8 +1,6 @@
 @import '../vars';
 
 .sidebar {
-    display: inline-block;
-
     position: sticky;
     top: $headerPosTop;
     left: $headerPosLeft;
@@ -136,7 +134,6 @@
 }
 
 .main__content {
-    display: inline-block;
     padding: 16px 16px 16px ($headerPosLeft + 16px);
     width: calc(100% - 75px); // $headerMinWidth + border
     transition: padding 0.5s, width 0.5s;

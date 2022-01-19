@@ -1,0 +1,35 @@
+.quizList {
+    list-style: none;
+}
+
+.quizListItem {
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #efefef;
+    border-radius: 4px;
+
+    &:hover {
+        background-color: #f5f5f5;
+    }
+    &__title {
+        font-size: 20px;
+    }
+    &-info {
+        display: flex;
+        &__item {
+            margin-right: 16px;
+
+            font-size: 16px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &--icon {
+                $iconSize: 19px;
+                margin-right: 4px;
+                width: $iconSize;
+                height: $iconSize;
+            }
+        }
+    }
+}
