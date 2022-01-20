@@ -1,0 +1,30 @@
+@import '../../vars';
+
+.btn__styled {
+    padding: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: $primaryColor;
+    color: $secondaryColor;
+    border: none;
+    border-radius: 3px;
+    font-weight: 500;
+
+    cursor: pointer;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    &:hover {
+        background-color: darken($primaryColor, 100%);
+        color: lighten($primaryColor, 100%);
+    }
+    &--outline {
+        border: 1px solid $primaryColor;
+        color: $primaryColor;
+        background-color: lighten($secondaryColor, 100%);
+        &:hover {
+            color: $secondaryColor;
+            background-color: $primaryColor;
+        }
+    }
+}

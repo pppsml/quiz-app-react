@@ -4,7 +4,7 @@ import { HashRouter } from 'react-router-dom';
 
 import App from './App';
 
-import { writeUserData, getUserData, getAllUsers, newPostKey } from './firebase'
+import { getQuizzes, writeQuiz } from './firebase'
 
 interface statistics {
   numQuestions: number,
@@ -40,7 +40,7 @@ interface quizzes {
 }
 
 export const quizzes: quizzes = {
-  "0": {
+  "gaAsW0": {
     createdAt: 1642484588647,
     info: {
       name: 'Имеешь ли ты зрение',
@@ -94,8 +94,8 @@ export const quizzes: quizzes = {
     },
     _id: 'gaAsW0'
   },
-  "123": {
-    createdAt: 1642484588647,
+  "AFhas123": {
+    createdAt: 1642484588648,
     info: {
       name: 'Закончил ли ты первый класс?',
       questions: [
@@ -133,12 +133,12 @@ export const quizzes: quizzes = {
     statistics: {
       numQuestions: 3,
       likes: 15,
-      played: 888,
+      played: 14,
     },
     _id: 'AFhas123'
   },
-  "1234": {
-    createdAt: 1642484588647,
+  "AFhas1234": {
+    createdAt: 1642484588649,
     info: {
       name: 'Закончил ли ты первый класс?',
       questions: [
@@ -198,8 +198,8 @@ export const quizzes: quizzes = {
     },
     _id: 'AFhas1234'
   },
-  "12377": {
-    createdAt: 1642484588647,
+  "AFhas12377": {
+    createdAt: 1642484588650,
     info: {
       name: 'Закончил ли ты первый класс?',
       questions: [
@@ -315,6 +315,15 @@ export const quizzes: quizzes = {
   },
 }
 
+const addQuizzes = () => {
+  Object.keys(quizzes).forEach((id, _) => {
+    writeQuiz(quizzes[id])
+  })
+}
+
+(window as any).addQuizzes = addQuizzes;
+(window as any).getQuizzes = getQuizzes;
+
 ReactDOM.render(
   <HashRouter>
       <React.StrictMode>
@@ -323,19 +332,3 @@ ReactDOM.render(
   </HashRouter>,
   document.getElementById('root')
 );
-
-// writeUserData({
-//   userId: 13941,
-//   name: 'Vlad',
-//   email: 'shumkin.99@inbox.ru',
-//   imageUrl: null,
-//   roles: [
-//     'admin',
-//     'Good boy',
-//     'programmer'
-//   ]
-// })
-
-// getUserData('12841')
-// getAllUsers()
-// console.log(newPostKey)

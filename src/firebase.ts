@@ -3,6 +3,8 @@ import { getDatabase, ref, set, child, get, push } from 'firebase/database';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
+import { quizData } from './'
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyALM5TDwXkgRlt-fLP0fjVSqdtJQJH4moQ",
@@ -19,47 +21,64 @@ const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app)
 
-interface User {
-  userId?: number
-  name: string
-  email: string
-  imageUrl: string | null
-  roles?: string[]
+export const writeQuiz = (quiz: quizData):void => {
+  set(ref(db, 'quizzes/' + quiz._id), quiz)
 }
 
-export const writeUserData = ({userId, name, email, imageUrl, roles}:User):void => {
-  set(ref(db, 'users/' + userId), {
-      username: name,
-      email: email,
-      profile_picture : imageUrl,
-      roles,
-  });
-}
-const dbRef = ref(db);
-
-export const getUserData = (userId:string) => 
-get(child(dbRef, `users/${userId}`))
-.then((snapshot) => {
-  if (snapshot.exists()) {
-    console.log(snapshot.val());
-  } else {
-    console.log("No data available");
-  }
-}).catch((error) => {
-  console.error(error);
-});
-
-export const getAllUsers = () => {
-  get(child(dbRef, `users`))
-  .then((snapshot) => {
+export const getQuizzes = () => [
+  get(child(ref(db), 'quizzes/'))
+  .then(snapshot => {
     if (snapshot.exists()) {
-      console.log(snapshot.val());
+      console.log(snapshot.val())
     } else {
-      console.log("No data available");
+      console.log('No data available')
     }
-  }).catch((error) => {
-    console.error(error);
   })
-}
+  .catch(err => {
+    console.error(err)
+  })
+]
 
-export const newPostKey = push(child(ref(db), 'users')).key;
+// interface User {
+//   userId?: number
+//   name: string
+//   email: string
+//   imageUrl: string | null
+//   roles?: string[]
+// }
+
+// export const writeUserData = ({userId, name, email, imageUrl, roles}:User):void => {
+//   set(ref(db, 'users/' + userId), {
+//       username: name,
+//       email: email,
+//       profile_picture : imageUrl,
+//       roles,
+//   });
+// }
+
+// export const getUserData = (userId:string) => 
+// get(child(dbRef, `users/${userId}`))
+// .then((snapshot) => {
+//   if (snapshot.exists()) {
+//     console.log(snapshot.val());
+//   } else {
+//     console.log("No data available");
+//   }
+// }).catch((error) => {
+//   console.error(error);
+// });
+
+// export const getAllUsers = () => {
+//   get(child(dbRef, `users`))
+//   .then((snapshot) => {
+//     if (snapshot.exists()) {
+//       console.log(snapshot.val());
+//     } else {
+//       console.log("No data available");
+//     }
+//   }).catch((error) => {
+//     console.error(error);
+//   })
+// }
+
+// export const newPostKey = push(child(ref(db), 'users')).key;

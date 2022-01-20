@@ -49,14 +49,14 @@
 }
 
 .nav__list-item.active {
-    background-color: $backgroundColor;
+    background-color: $secondaryColor;
 }
 
 .nav__list-item b {
     position: absolute;
     height: 20px;
     width: 100%;
-    background-color: $backgroundColor;
+    background-color: $secondaryColor;
     display: none;
 }
 

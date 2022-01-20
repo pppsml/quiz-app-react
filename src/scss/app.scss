@@ -12,7 +12,7 @@ body {
     min-height: 100vh;
     height: 100%;
     width: 100%;
-    background: $backgroundColor;
+    background: $secondaryColor;
 }
 
 .page__wrapper {
@@ -57,3 +57,4 @@ body {
 
 @import './components/Navbar';
 @import './components/QuizList';
+@import './components/UI/Button';
