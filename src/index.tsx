@@ -1,45 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 
 import App from './App';
+import store from './redux/store';
 
 import { getQuizzes, writeQuiz } from './firebase'
+import { IQuizzes } from './types';
 
-interface statistics {
-  numQuestions: number,
-  played: number,
-  likes: number,
-}
-
-interface answerOption {
-  text: string,
-  id: number,
-}
-
-interface question {
-  question: string,
-  options: answerOption[],
-  correct: number | number[]
-}
-
-interface quizInfo {
-  name: string,
-  questions: question[],
-}
-
-export interface quizData {
-  createdAt: number,
-  info: quizInfo,
-  statistics: statistics,
-  _id: string,
-}
-
-interface quizzes {
-  [ key:string ]: quizData,
-}
-
-export const quizzes: quizzes = {
+export const quizzes: IQuizzes = {
   "gaAsW0": {
     createdAt: 1642484588647,
     info: {
@@ -327,7 +297,9 @@ const addQuizzes = () => {
 ReactDOM.render(
   <HashRouter>
       <React.StrictMode>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </React.StrictMode>
   </HashRouter>,
   document.getElementById('root')

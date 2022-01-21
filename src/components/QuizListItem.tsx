@@ -2,11 +2,11 @@ import React from 'react'
 
 import { IoListOutline, IoPlayOutline, IoHeartOutline } from 'react-icons/io5'
 
-import { quizData } from '../'
+import { IQuizData } from '../types'
 import { Button } from './'
 
 interface ListItemProps {
-  quizData: quizData,
+  quizData: IQuizData,
   likeQuiz: (id: string) => void,
 }
 

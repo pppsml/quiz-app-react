@@ -3,7 +3,7 @@ import { getDatabase, ref, set, child, get, push } from 'firebase/database';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import { quizData } from './'
+import { IQuizData, IQuizzes } from './types'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -21,23 +21,28 @@ const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app)
 
-export const writeQuiz = (quiz: quizData):void => {
+export const writeQuiz = (quiz: IQuizData):void => {
   set(ref(db, 'quizzes/' + quiz._id), quiz)
 }
 
-export const getQuizzes = () => [
-  get(child(ref(db), 'quizzes/'))
-  .then(snapshot => {
-    if (snapshot.exists()) {
-      console.log(snapshot.val())
-    } else {
-      console.log('No data available')
+export const getQuizzes = async () => {
+  const snapshot = await get(child(ref(db), 'quizzes/'))
+
+  const data:IQuizzes = {}
+  if (snapshot.exists()) {
+    const response = snapshot.val()
+    for (let id in response) {
+      data[id] = response[id]
     }
-  })
-  .catch(err => {
-    console.error(err)
-  })
-]
+  } else {
+    console.log('No data available')
+  }
+  return data
+
+  // .catch(err => {
+  //   console.error(err)
+  // })
+}
 
 // interface User {
 //   userId?: number

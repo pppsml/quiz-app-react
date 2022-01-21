@@ -1,12 +1,14 @@
-import { ADD_QUIZZES, action } from "../actionTypes"
+import { SET_QUIZZES, action } from "../../types"
 
-const initialState = {
-  quizzes: {} = {}
+import { IQuizzesState } from "../../types"
+
+const initialState:IQuizzesState = {
+  quizzes: {}
 }
 
-const quizzes = (state = initialState, action: action) => {
+const quizzes = (state:IQuizzesState = initialState, action: action) => {
   switch (action.type) {
-    case ADD_QUIZZES: 
+    case SET_QUIZZES: 
       return {
         ...state,
         quizzes: {...state.quizzes, ...action.payload}
