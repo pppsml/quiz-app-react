@@ -38,52 +38,33 @@ export const getQuizzes = async () => {
     console.log('No data available')
   }
   return data
-
-  // .catch(err => {
-  //   console.error(err)
-  // })
 }
 
-// interface User {
-//   userId?: number
-//   name: string
-//   email: string
-//   imageUrl: string | null
-//   roles?: string[]
-// }
+// export const getQuizFromId = async (id: string) => {
+//   const dbRef = ref(db);
+//   const snapshot = await get(child(dbRef, `quizzes/${id}`))
 
-// export const writeUserData = ({userId, name, email, imageUrl, roles}:User):void => {
-//   set(ref(db, 'users/' + userId), {
-//       username: name,
-//       email: email,
-//       profile_picture : imageUrl,
-//       roles,
-//   });
-// }
-
-// export const getUserData = (userId:string) => 
-// get(child(dbRef, `users/${userId}`))
-// .then((snapshot) => {
+//   let data:IQuizData
 //   if (snapshot.exists()) {
-//     console.log(snapshot.val());
+//     data = snapshot.val()
+//     console.log(data)
 //   } else {
-//     console.log("No data available");
+//     console.log('No data available')
 //   }
-// }).catch((error) => {
-//   console.error(error);
-// });
-
-// export const getAllUsers = () => {
-//   get(child(dbRef, `users`))
-//   .then((snapshot) => {
-//     if (snapshot.exists()) {
-//       console.log(snapshot.val());
-//     } else {
-//       console.log("No data available");
-//     }
-//   }).catch((error) => {
-//     console.error(error);
-//   })
+//   // return data
 // }
 
-// export const newPostKey = push(child(ref(db), 'users')).key;
+export const getQuizFromId = async (id: string | undefined) => {
+  if (typeof id !== 'string') {
+    return 'Укажите id'
+  }
+
+  const dbRef = ref(getDatabase());
+  const snapshot = await get(child(dbRef, `quizzes/${id}`))
+
+  if (snapshot.exists()) {
+    return snapshot.val()
+  } else {
+    return 'no data'
+  }
+}

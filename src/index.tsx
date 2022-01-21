@@ -6,7 +6,6 @@ import { HashRouter } from 'react-router-dom';
 import App from './App';
 import store from './redux/store';
 
-import { getQuizzes, writeQuiz } from './firebase'
 import { IQuizzes } from './types';
 
 export const quizzes: IQuizzes = {
@@ -284,15 +283,6 @@ export const quizzes: IQuizzes = {
     _id: 'AFhas12377'
   },
 }
-
-const addQuizzes = () => {
-  Object.keys(quizzes).forEach((id, _) => {
-    writeQuiz(quizzes[id])
-  })
-}
-
-(window as any).addQuizzes = addQuizzes;
-(window as any).getQuizzes = getQuizzes;
 
 ReactDOM.render(
   <HashRouter>

@@ -9,7 +9,6 @@ import { fetchQuizzes } from '../redux/actions/quizzes'
 function QuizList() {
   const dispatch = useDispatch()
   const quizzes = useSelector(({quizzes}:IQuizzesState) => quizzes)
-  console.log(quizzes)
 
   useEffect(() => {
     dispatch(fetchQuizzes())

@@ -26,9 +26,12 @@
             align-items: center;
             &--icon {
                 $iconSize: 19px;
-                margin-right: 4px;
                 width: $iconSize;
                 height: $iconSize;
+                margin-right: 4px;
+                &:last-child {
+                    margin-right: 0;
+                }
             }
         }
     }
@@ -37,4 +40,9 @@
         justify-content: space-between;
         align-items: center;
     }
+}
+
+.buttonContainer {
+    display: flex;
+    flex-wrap: nowrap;
 }

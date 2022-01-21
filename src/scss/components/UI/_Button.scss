@@ -6,6 +6,11 @@
     justify-content: center;
     align-items: center;
 
+    min-width: 30px;
+    min-height: 30px;
+
+    margin-right: 5px;
+
     background-color: $primaryColor;
     color: $secondaryColor;
     border: none;
@@ -26,5 +31,9 @@
             color: $secondaryColor;
             background-color: $primaryColor;
         }
+    }
+
+    &:last-child {
+        margin-right: 0;
     }
 }

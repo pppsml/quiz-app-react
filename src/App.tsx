@@ -4,8 +4,7 @@ import { IoListOutline, IoConstructOutline } from 'react-icons/io5'
 import { Routes, Route } from 'react-router-dom';
 
 import { Navbar } from './components';
-import Constructor from './pages/Constructor';
-import QuizList from './pages/QuizList';
+import { QuizList, Constructor, Quiz } from './pages';
 
 import './scss/app.scss'
 
@@ -35,6 +34,9 @@ const App: React.FC = () => {
       <Routes>
         <Route path='/' element={<QuizList />} />
         <Route path='/constructor' element={<Constructor />} />
+        <Route path='/quiz' element={<Quiz />} >
+          <Route path='/quiz/:id' element={<Quiz />} />
+        </Route>
       </Routes>
     </div>
   );

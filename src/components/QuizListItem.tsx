@@ -1,6 +1,7 @@
 import React from 'react'
 
-import { IoListOutline, IoPlayOutline, IoHeartOutline } from 'react-icons/io5'
+import { IoListOutline, IoPlayOutline, IoHeartOutline, IoPlay } from 'react-icons/io5'
+import { Link } from 'react-router-dom'
 
 import { IQuizData } from '../types'
 import { Button } from './'
@@ -43,7 +44,14 @@ const QuizListItem: React.FC<ListItemProps> = ({quizData, likeQuiz}) => {
       </div>
       <div className='quizListItem__bottom'>
         <div></div>
-        <Button onClick={onLikeQuiz} outline> <IoHeartOutline className='quizListItem-info__item--icon' /> Нравится</Button>
+        <div className='buttonContainer'>
+        <Button onClick={onLikeQuiz} outline title='Поставить отметку "Нравится"'> <IoHeartOutline className='quizListItem-info__item--icon' /> Нравится</Button>
+        <Link to={`/quiz/${_id}`} >
+          <Button onClick={onLikeQuiz} title='Пройти тест'> 
+            <IoPlay className='quizListItem-info__item--icon' />
+          </Button>
+        </Link>
+        </div>
       </div>
     </li>
   )

@@ -31,6 +31,16 @@ export interface IQuizzes {
   [ key:string ] : IQuizData,
 }
 
+export interface IQuiz {
+  createdAt?: number,
+  info?: IQuizInfo,
+  statistics?: IStatistics,
+  _id?: string,
+  started: boolean,
+  finished: boolean,
+  currentQuestion: number,
+}
+
 
 
 export interface IQuizzesState {
