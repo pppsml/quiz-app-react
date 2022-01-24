@@ -25,46 +25,36 @@ export const writeQuiz = (quiz: IQuizData):void => {
   set(ref(db, 'quizzes/' + quiz._id), quiz)
 }
 
-export const getQuizzes = async () => {
+export const getQuizzes = async ():Promise<IQuizzes> => {
   const snapshot = await get(child(ref(db), 'quizzes/'))
 
   const data:IQuizzes = {}
-  if (snapshot.exists()) {
-    const response = snapshot.val()
-    for (let id in response) {
-      data[id] = response[id]
+  try {
+    if (snapshot.exists()) {
+      const response = snapshot.val()
+      for (let id in response) {
+        data[id] = response[id]
+      }
+    } else {
+      console.log('No data available')
     }
-  } else {
-    console.log('No data available')
+  } catch(err) {
+    console.error(err)
   }
   return data
 }
 
-// export const getQuizFromId = async (id: string) => {
-//   const dbRef = ref(db);
+// export const getQuizFromId = async (id: string | undefined) => {
+//   if (typeof id !== 'string') {
+//     return 'Укажите id'
+//   }
+
+//   const dbRef = ref(getDatabase());
 //   const snapshot = await get(child(dbRef, `quizzes/${id}`))
 
-//   let data:IQuizData
 //   if (snapshot.exists()) {
-//     data = snapshot.val()
-//     console.log(data)
+//     return snapshot.val()
 //   } else {
-//     console.log('No data available')
+//     return 'no data'
 //   }
-//   // return data
 // }
-
-export const getQuizFromId = async (id: string | undefined) => {
-  if (typeof id !== 'string') {
-    return 'Укажите id'
-  }
-
-  const dbRef = ref(getDatabase());
-  const snapshot = await get(child(dbRef, `quizzes/${id}`))
-
-  if (snapshot.exists()) {
-    return snapshot.val()
-  } else {
-    return 'no data'
-  }
-}

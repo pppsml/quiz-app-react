@@ -3,7 +3,10 @@ import { SET_QUIZZES, action } from "../../types"
 import { IQuizzesState } from "../../types"
 
 const initialState:IQuizzesState = {
-  quizzes: {}
+  quizzes: {
+    items: {},
+    isLoaded: false,
+  },
 }
 
 const quizzes = (state:IQuizzesState = initialState, action: action) => {
@@ -11,7 +14,11 @@ const quizzes = (state:IQuizzesState = initialState, action: action) => {
     case SET_QUIZZES: 
       return {
         ...state,
-        quizzes: {...state.quizzes, ...action.payload}
+        quizzes: {
+          ...state.quizzes,
+          items: action.payload,
+          isLoaded: true,
+        },
       }
     default :
       return state

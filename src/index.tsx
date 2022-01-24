@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 
 import App from './App';
+import { writeQuiz } from './firebase';
 import store from './redux/store';
 
 import { IQuizzes } from './types';
@@ -15,7 +16,7 @@ export const quizzes: IQuizzes = {
       name: 'Имеешь ли ты зрение',
       questions: [
         {
-          question: 'Какого цвета небо?',
+          text: 'Какого цвета небо?',
           options: [
             {text: 'Серый', id: 1},
             {text: 'Голубой', id: 2},
@@ -25,7 +26,7 @@ export const quizzes: IQuizzes = {
           correct: 2
         },
         {
-          question: 'Какого цвета вода?',
+          text: 'Какого цвета вода?',
           options: [
             {text: 'Голубой', id: 1},
             {text: 'Синий', id: 2},
@@ -35,7 +36,7 @@ export const quizzes: IQuizzes = {
           correct: 4
         },
         {
-          question: 'Какого цвета трава?',
+          text: 'Какого цвета трава?',
           options: [
             {text: 'Серый', id: 1},
             {text: 'Голубой', id: 2},
@@ -45,7 +46,7 @@ export const quizzes: IQuizzes = {
           correct: 4
         },
         {
-          question: 'Какого цвета кровь человека?',
+          text: 'Какого цвета кровь человека?',
           options: [
             {text: 'Серый', id: 1},
             {text: 'Голубой', id: 2},
@@ -69,7 +70,7 @@ export const quizzes: IQuizzes = {
       name: 'Закончил ли ты первый класс?',
       questions: [
         {
-          question: 'Чему равно 2+2?',
+          text: 'Чему равно 2+2?',
           options: [
             {text: '4', id: 1},
             {text: '6-2', id: 2},
@@ -79,7 +80,7 @@ export const quizzes: IQuizzes = {
           correct: 1 // множественный выбор
         },
         {
-          question: 'Сколько всего цифр?',
+          text: 'Сколько всего цифр?',
           options: [
             {text: 'Много', id: 1},
             {text: 'Бесконечно', id: 2},
@@ -89,7 +90,7 @@ export const quizzes: IQuizzes = {
           correct: 3
         },
         {
-          question: 'Как пишется жы-ши?',
+          text: 'Как пишется жы-ши?',
           options: [
             {text: 'жы-ши пиши от душы', id: 1},
             {text: 'жи-ши пиши через "И"', id: 2},
@@ -112,7 +113,7 @@ export const quizzes: IQuizzes = {
       name: 'Закончил ли ты первый класс?',
       questions: [
         {
-          question: 'Чему равно 2+2?',
+          text: 'Чему равно 2+2?',
           options: [
             {text: '4', id: 1},
             {text: '6-2', id: 2},
@@ -122,7 +123,7 @@ export const quizzes: IQuizzes = {
           correct: 1 // множественный выбор
         },
         {
-          question: 'Сколько всего цифр?',
+          text: 'Сколько всего цифр?',
           options: [
             {text: 'Много', id: 1},
             {text: 'Бесконечно', id: 2},
@@ -132,7 +133,7 @@ export const quizzes: IQuizzes = {
           correct: 3
         },
         {
-          question: 'Как пишется жы-ши?',
+          text: 'Как пишется жы-ши?',
           options: [
             {text: 'жы-ши пиши от душы', id: 1},
             {text: 'жи-ши пиши через "И"', id: 2},
@@ -141,7 +142,7 @@ export const quizzes: IQuizzes = {
           correct: 2
         },
         {
-          question: 'Как пишется жы-ши?',
+          text: 'Как пишется жы-ши?',
           options: [
             {text: 'жы-ши пиши от душы', id: 1},
             {text: 'жи-ши пиши через "И"', id: 2},
@@ -150,7 +151,7 @@ export const quizzes: IQuizzes = {
           correct: 2
         },
         {
-          question: 'Как пишется жы-ши?',
+          text: 'Как пишется жы-ши?',
           options: [
             {text: 'жы-ши пиши от душы', id: 1},
             {text: 'жи-ши пиши через "И"', id: 2},
@@ -173,7 +174,7 @@ export const quizzes: IQuizzes = {
       name: 'Закончил ли ты первый класс?',
       questions: [
         {
-          question: 'Чему равно 2+2?',
+          text: 'Чему равно 2+2?',
           options: [
             {text: '4', id: 1},
             {text: '6-2', id: 2},
@@ -183,7 +184,7 @@ export const quizzes: IQuizzes = {
           correct: 1 // множественный выбор
         },
         {
-          question: 'Сколько всего цифр?',
+          text: 'Сколько всего цифр?',
           options: [
             {text: 'Много', id: 1},
             {text: 'Бесконечно', id: 2},
@@ -193,7 +194,7 @@ export const quizzes: IQuizzes = {
           correct: 3
         },
         {
-          question: 'Как пишется жы-ши?',
+          text: 'Как пишется жы-ши?',
           options: [
             {text: 'жы-ши пиши от душы', id: 1},
             {text: 'жи-ши пиши через "И"', id: 2},
@@ -202,7 +203,7 @@ export const quizzes: IQuizzes = {
           correct: 2
         },
         {
-          question: 'Как пишется жы-ши?',
+          text: 'Как пишется жы-ши?',
           options: [
             {text: 'жы-ши пиши от душы', id: 1},
             {text: 'жи-ши пиши через "И"', id: 2},
@@ -211,7 +212,7 @@ export const quizzes: IQuizzes = {
           correct: 2
         },
         {
-          question: 'Как пишется жы-ши?',
+          text: 'Как пишется жы-ши?',
           options: [
             {text: 'жы-ши пиши от душы', id: 1},
             {text: 'жи-ши пиши через "И"', id: 2},
@@ -220,7 +221,7 @@ export const quizzes: IQuizzes = {
           correct: 2
         },
         {
-          question: 'Как пишется жы-ши?',
+          text: 'Как пишется жы-ши?',
           options: [
             {text: 'жы-ши пиши от душы', id: 1},
             {text: 'жи-ши пиши через "И"', id: 2},
@@ -229,7 +230,7 @@ export const quizzes: IQuizzes = {
           correct: 2
         },
         {
-          question: 'Как пишется жы-ши?',
+          text: 'Как пишется жы-ши?',
           options: [
             {text: 'жы-ши пиши от душы', id: 1},
             {text: 'жи-ши пиши через "И"', id: 2},
@@ -238,7 +239,7 @@ export const quizzes: IQuizzes = {
           correct: 2
         },
         {
-          question: 'Как пишется жы-ши?',
+          text: 'Как пишется жы-ши?',
           options: [
             {text: 'жы-ши пиши от душы', id: 1},
             {text: 'жи-ши пиши через "И"', id: 2},
@@ -247,7 +248,7 @@ export const quizzes: IQuizzes = {
           correct: 2
         },
         {
-          question: 'Как пишется жы-ши?',
+          text: 'Как пишется жы-ши?',
           options: [
             {text: 'жы-ши пиши от душы', id: 1},
             {text: 'жи-ши пиши через "И"', id: 2},
@@ -256,7 +257,7 @@ export const quizzes: IQuizzes = {
           correct: 2
         },
         {
-          question: 'Как пишется жы-ши?',
+          text: 'Как пишется жы-ши?',
           options: [
             {text: 'жы-ши пиши от душы', id: 1},
             {text: 'жи-ши пиши через "И"', id: 2},
@@ -265,7 +266,7 @@ export const quizzes: IQuizzes = {
           correct: 2
         },
         {
-          question: 'Как пишется жы-ши?',
+          text: 'Как пишется жы-ши?',
           options: [
             {text: 'жы-ши пиши от душы', id: 1},
             {text: 'жи-ши пиши через "И"', id: 2},
@@ -283,6 +284,10 @@ export const quizzes: IQuizzes = {
     _id: 'AFhas12377'
   },
 }
+
+// for (let id in quizzes) {
+//   writeQuiz(quizzes[id])
+// }
 
 ReactDOM.render(
   <HashRouter>

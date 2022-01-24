@@ -1,21 +1,13 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
+import { useSelector } from 'react-redux'
 
 import { QuizListItem } from '../components'
 
 import { IQuizzesState } from '../types'
-import { fetchQuizzes } from '../redux/actions/quizzes'
 
 function QuizList() {
-  const dispatch = useDispatch()
-  const quizzes = useSelector(({quizzes}:IQuizzesState) => quizzes)
-
-  useEffect(() => {
-    dispatch(fetchQuizzes())
-  }, [])
-
-
-
+  const { items } = useSelector(({quizzes}:IQuizzesState) => quizzes)
+  
   const likeQuiz = (id: string):void => {
     console.log('Liked quiz with id: ', id)
   }
@@ -25,9 +17,9 @@ function QuizList() {
       <h1 className='title'>Список тестов</h1>
       <ul className='quizList'>
         {
-          quizzes &&
-          Object.keys(quizzes).map((id:string) => (
-            <QuizListItem likeQuiz={likeQuiz} quizData={quizzes[id]} key={quizzes[id]._id} />
+          items &&
+          Object.keys(items).map((id:string) => (
+            <QuizListItem likeQuiz={likeQuiz} quizData={items[id]} key={items[id]._id} />
           ))
         }
       </ul>

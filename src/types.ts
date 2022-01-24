@@ -1,4 +1,4 @@
-interface IStatistics {
+export interface IQuizStatistics {
   numQuestions: number,
   played: number,
   likes: number,
@@ -9,13 +9,13 @@ interface IAnswerOption {
   id: number,
 }
 
-interface IQuestion {
-  question: string,
+export interface IQuestion {
+  text: string,
   options: IAnswerOption[],
   correct: number | number[]
 }
 
-interface IQuizInfo {
+export interface IQuizInfo {
   name: string,
   questions: IQuestion[],
 }
@@ -23,7 +23,7 @@ interface IQuizInfo {
 export interface IQuizData {
   createdAt: number,
   info: IQuizInfo,
-  statistics: IStatistics,
+  statistics: IQuizStatistics,
   _id: string,
 }
 
@@ -31,20 +31,29 @@ export interface IQuizzes {
   [ key:string ] : IQuizData,
 }
 
+export interface IAnswerState {
+  [key: string]: 'correct' | 'error'
+}
+
 export interface IQuiz {
-  createdAt?: number,
-  info?: IQuizInfo,
-  statistics?: IStatistics,
-  _id?: string,
+  createdAt: number,
+  info: IQuizInfo,
+  statistics: IQuizStatistics,
+  _id: string,
   started: boolean,
   finished: boolean,
   currentQuestion: number,
+  score: number,
+  answerState: IAnswerState | null,
 }
 
 
 
 export interface IQuizzesState {
-  quizzes: IQuizzes 
+  quizzes: {
+    items: IQuizzes,
+    isLoaded: boolean,
+  },
 }
 
 export interface action {

@@ -3,6 +3,7 @@ import React from 'react'
 import { IoListOutline, IoPlayOutline, IoHeartOutline, IoPlay } from 'react-icons/io5'
 import { Link } from 'react-router-dom'
 
+import { getText } from './functions'
 import { IQuizData } from '../types'
 import { Button } from './'
 
@@ -14,18 +15,7 @@ interface ListItemProps {
 const QuizListItem: React.FC<ListItemProps> = ({quizData, likeQuiz}) => {
   const {createdAt, info, statistics, _id} = quizData
 
-  const getText = (num: number, wordArray: string[]):string => {
-    const decNum = num % 100
-    const digit = num % 10
-
-    if (decNum >= 11 && decNum <= 19) return wordArray[2]
-
-    if (digit === 1) return wordArray[0]
-    if (digit >= 2 && digit <= 4) return wordArray[1]
-    if (digit >= 5 && digit <= 9 || digit === 0) return wordArray[2]
-
-    return 'Ошибка'
-  }
+  // TODO createdAt
 
   const playedText = getText(statistics.played, ['раз', 'раза', 'раз'])
   const numQuestionsText = getText(statistics.numQuestions, ['вопрос', 'вопроса', 'вопросов'])
@@ -48,7 +38,7 @@ const QuizListItem: React.FC<ListItemProps> = ({quizData, likeQuiz}) => {
         <Button onClick={onLikeQuiz} outline title='Поставить отметку "Нравится"'> <IoHeartOutline className='quizListItem-info__item--icon' /> Нравится</Button>
         <Link to={`/quiz/${_id}`} >
           <Button onClick={onLikeQuiz} title='Пройти тест'> 
-            <IoPlay className='quizListItem-info__item--icon' />
+            <IoPlay className='buttonIcon' />
           </Button>
         </Link>
         </div>

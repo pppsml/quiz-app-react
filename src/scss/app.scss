@@ -2,59 +2,68 @@
 @import './vars';
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Montserrat', sans-serif;
 }
 
 body {
-    min-height: 100vh;
-    height: 100%;
-    width: 100%;
-    background: $secondaryColor;
+	min-height: 100vh;
+	height: 100%;
+	width: 100%;
+	background: $secondaryColor;
 }
 
 .page__wrapper {
-    position: relative;
-    display: flex;
+	position: relative;
+	display: flex;
 
-    min-height: 100vh;
-    height: 100%;
-    width: 100%;
-    max-width: 1920px;
-    margin: 0 auto;
+	min-height: 100vh;
+	height: 100%;
+	width: 100%;
+	max-width: 1920px;
+	margin: 0 auto;
 }
 
 /* text */
 .text,
 .title {
-    width: 100%;
-    font-size: 20px;
-    text-align: center;
-    font-weight: 500;
-    margin-bottom: 8px;
-    word-wrap: break-word;
+	width: 100%;
+	font-size: 20px;
+	text-align: center;
+	font-weight: 500;
+	margin-bottom: 8px;
+	word-wrap: break-word;
 }
 
 .text-minimal {
-    margin: -8px 0 8px 0;
-    font-size: 13px;
-    /* color: #999; */
-    font-weight: 400;
+	margin: -8px 0 8px 0;
+	font-size: 13px;
+	/* color: #999; */
+	font-weight: 400;
 }
 
 .title {
-    user-select: text;
-    margin-bottom: 16px;
-    font-size: 26px;
-    font-weight: 700;
+	user-select: text;
+	margin-bottom: 16px;
+	font-size: 26px;
+	font-weight: 700;
 }
 
 .tal {
-    text-align: left;
+	text-align: left;
+}
+
+.tar {
+	text-align: right;
+}
+
+.jcc {
+	justify-content: center;
 }
 
 @import './components/Navbar';
 @import './components/QuizList';
 @import './components/UI/Button';
+@import './components/Quiz';

@@ -1,39 +1,54 @@
 @import '../../vars';
 
 .btn__styled {
-    padding: 4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	padding: 4px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-    min-width: 30px;
-    min-height: 30px;
+	min-width: 30px;
+	min-height: 30px;
 
-    margin-right: 5px;
+	margin-right: 5px;
 
-    background-color: $primaryColor;
-    color: $secondaryColor;
-    border: none;
-    border-radius: 3px;
-    font-weight: 500;
+	background-color: $primaryColor;
+	color: $secondaryColor;
+	border: none;
+	border-radius: 3px;
+	font-weight: 500;
 
-    cursor: pointer;
-    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
-    &:hover {
-        background-color: darken($primaryColor, 100%);
-        color: lighten($primaryColor, 100%);
-    }
-    &--outline {
-        border: 1px solid $primaryColor;
-        color: $primaryColor;
-        background-color: lighten($secondaryColor, 100%);
-        &:hover {
-            color: $secondaryColor;
-            background-color: $primaryColor;
-        }
-    }
+	cursor: pointer;
+	transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+	&:hover {
+		background-color: darken($primaryColor, 100%);
+		color: lighten($primaryColor, 100%);
+	}
+	&--outline {
+		border: 1px solid $primaryColor;
+		color: $primaryColor;
+		background-color: lighten($secondaryColor, 100%);
+		&:hover {
+			color: $secondaryColor;
+			background-color: $primaryColor;
+		}
+	}
 
-    &:last-child {
-        margin-right: 0;
-    }
+	&:last-child {
+		margin-right: 0;
+	}
+}
+
+.buttonContainer {
+	display: flex;
+	flex-wrap: nowrap;
+}
+
+.buttonIcon {
+	$iconSize: 19px;
+	width: $iconSize;
+	height: $iconSize;
+	margin-right: 4px;
+	&:last-child {
+		margin-right: 0;
+	}
 }
