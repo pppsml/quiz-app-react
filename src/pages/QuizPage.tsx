@@ -2,18 +2,27 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { Quiz, StartMenu } from "../components";
+import { FinishedQuiz, Quiz, StartMenu } from "../components";
 import { IQuiz, IQuizzesState } from '../types'
+
+const initQuiz = [
+  {
+    text: 'empty',
+    options: [{id: 1, text: 'empty'}, {id: 2, text: 'empty'}, {id: 3, text: 'empty'}],
+    correct: 1,
+  },
+  {
+    text: 'empty',
+    options: [{id: 1, text: 'empty'}, {id: 2, text: 'empty'}, {id: 3, text: 'empty'}],
+    correct: 1,
+  },
+]
 
 const initialQuiz:IQuiz = {
   createdAt: 0,
   info: {
     name: 'empty',
-    questions: [{
-      text: 'empty',
-      options: [{id: 1, text: 'empty'}, {id: 2, text: 'empty'}, {id: 3, text: 'empty'}],
-      correct: 1,
-    }],
+    questions: initQuiz,
   },
   statistics: {
     likes: 0,
@@ -41,10 +50,9 @@ const QuizPage:React.FC = () => {
     setQuiz((prev: any) => ({...prev, ...quizData}))
   }, [quizData])
 
-    console.log(quiz)
-  // ! эти параметры могут быть undefined
   const { finished, started, info, statistics, score, currentQuestion, answerState, createdAt } = quiz
 
+  
   const getAnswer = (answerId:number) => {
     if (!quiz.answerState) {
       const isCorrect = answerId === info?.questions[currentQuestion].correct
@@ -55,44 +63,67 @@ const QuizPage:React.FC = () => {
         },
         score: isCorrect ? prev.score + 1 : prev.score
       }))
-      nextQuestion()
+      const timeout = setTimeout(() => {
+        if (currentQuestion + 1 === statistics.numQuestions) {
+          finishQuiz()
+        } else {
+          nextQuestion()
+        }
+        clearTimeout(timeout)
+      }, 1.5e3)
     }
+  }
+  
+  const startQuiz = ():void => {
+    setQuiz(prev => ({
+      ...prev,
+      started: true,
+    }))
+  }
+
+  const finishQuiz = ():void => {
+    // todo 
+    setQuiz(prev => ({
+      ...prev,
+      finished: true,
+    }))
   }
 
   const nextQuestion = ():void => {
-    const timeout = setTimeout(() => {
-      setQuiz(prev => ({
-        ...prev,
-        currentQuestion: prev.currentQuestion + 1,
-        answerState: null
-      }))
-      clearTimeout(timeout)
-    }, 1.5e3)
+    setQuiz(prev => ({
+      ...prev,
+      currentQuestion: prev.currentQuestion + 1,
+      answerState: null
+    }))
   }
 
   // TODO сделать загрузку, старт, и финиш теста
   return (
     <div className="main__content">
-      {id 
-      ? 
-        started 
-        ? <div>
-            <h2 className='text title'>{info?.name}</h2>
-            <Quiz 
+      <div className="quiz__container">
+
+        {isLoaded && <h2 className="text title">{info.name}</h2>}
+        {id 
+        ? !started 
+          ? <StartMenu 
+            isLoaded={isLoaded}
+            createdAt={createdAt}
+            info={info}
+            statistics={statistics}
+            startQuiz={startQuiz}
+          />
+          : !finished 
+          ? <Quiz 
               currentQuestion={currentQuestion + 1} 
               question={info.questions[currentQuestion]} 
               numQuestions={statistics.numQuestions}
               getAnswer={getAnswer}
               answerState={answerState}
-              />
-          </div>
-          : <StartMenu 
-          isLoaded={isLoaded}
-          createdAt={createdAt}
-          info={info}
-          statistics={statistics}
-          />
-      : 'Выбери тест'}
+            />
+          : <FinishedQuiz score={score} numQuestions={statistics.numQuestions} info={info} />
+        : 'Выбери тест'}
+
+      </div>
     </div>
   )
 }

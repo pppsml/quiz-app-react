@@ -8,7 +8,7 @@ interface NavbarProps {
     paths: IPath[]
 }
 
-const Navbar: React.FC<NavbarProps> = ({paths}) => {
+const Navbar: React.FC<NavbarProps> = React.memo(({paths}) => {
     return (
         <aside className="sidebar">
             <nav className="navigation">
@@ -20,6 +20,6 @@ const Navbar: React.FC<NavbarProps> = ({paths}) => {
             </nav>
         </aside>
     )
-}
+})
 
 export default Navbar

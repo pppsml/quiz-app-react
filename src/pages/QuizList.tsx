@@ -5,10 +5,11 @@ import { QuizListItem } from '../components'
 
 import { IQuizzesState } from '../types'
 
-function QuizList() {
+const QuizList:React.FC = () => {
   const { items } = useSelector(({quizzes}:IQuizzesState) => quizzes)
   
   const likeQuiz = (id: string):void => {
+    // todo если не авторизован => страница авторизации
     console.log('Liked quiz with id: ', id)
   }
 

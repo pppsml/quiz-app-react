@@ -13,9 +13,9 @@
 
 	background-color: $primaryColor;
 	color: $secondaryColor;
+	font-weight: 500;
 	border: none;
 	border-radius: 3px;
-	font-weight: 500;
 
 	cursor: pointer;
 	transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
@@ -26,7 +26,7 @@
 	&--outline {
 		border: 1px solid $primaryColor;
 		color: $primaryColor;
-		background-color: lighten($secondaryColor, 100%);
+		background-color: lighten($secondaryColor, 5%);
 		&:hover {
 			color: $secondaryColor;
 			background-color: $primaryColor;
@@ -43,7 +43,7 @@
 	flex-wrap: nowrap;
 }
 
-.buttonIcon {
+.icon {
 	$iconSize: 19px;
 	width: $iconSize;
 	height: $iconSize;

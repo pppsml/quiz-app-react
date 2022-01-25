@@ -11,9 +11,9 @@ interface QuizProps {
   answerState: IAnswerState | null
 }
 
-const Quiz = ({currentQuestion, question, numQuestions, answerState, getAnswer}:QuizProps) => {
+const Quiz:React.FC<QuizProps> = ({currentQuestion, question, numQuestions, answerState, getAnswer}) => {
   return (
-  <div className='quiz__container'>
+  <>
     <div className='text tal'>
       {currentQuestion}/{numQuestions}. {question?.text}
     </div>
@@ -27,7 +27,7 @@ const Quiz = ({currentQuestion, question, numQuestions, answerState, getAnswer}:
         />
       ))}
     </ul>
-  </div>
+  </>
   )
 }
 

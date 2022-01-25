@@ -28,17 +28,17 @@ const QuizListItem: React.FC<ListItemProps> = ({quizData, likeQuiz}) => {
     <li className='quizListItem'>
       <p className='quizListItem__title'>{info.name}</p>
       <div className='quizListItem-info'>
-        <p className='quizListItem-info__item'> <IoListOutline className='quizListItem-info__item--icon' /> {statistics.numQuestions} {numQuestionsText}</p>
-        <p className='quizListItem-info__item'> <IoPlayOutline className='quizListItem-info__item--icon' /> {statistics.played} {playedText} пройдено</p>
-        <p className='quizListItem-info__item'> <IoHeartOutline className='quizListItem-info__item--icon' /> {statistics.likes} </p>
+        <p className='quizListItem-info__item'> <IoListOutline className='icon' /> {statistics.numQuestions} {numQuestionsText}</p>
+        <p className='quizListItem-info__item'> <IoPlayOutline className='icon' /> {statistics.played} {playedText} пройдено</p>
+        <p className='quizListItem-info__item'> <IoHeartOutline className='icon' /> {statistics.likes} </p>
       </div>
       <div className='quizListItem__bottom'>
         <div></div>
         <div className='buttonContainer'>
-        <Button onClick={onLikeQuiz} outline title='Поставить отметку "Нравится"'> <IoHeartOutline className='quizListItem-info__item--icon' /> Нравится</Button>
-        <Link to={`/quiz/${_id}`} >
-          <Button onClick={onLikeQuiz} title='Пройти тест'> 
-            <IoPlay className='buttonIcon' />
+        <Button onClick={onLikeQuiz} outline title='Поставить отметку "Нравится"'> <IoHeartOutline className='icon' /> Нравится</Button>
+        <Link className='link' to={`/quiz/${_id}`} >
+          <Button title='Пройти тест'>
+            <IoPlay className='icon' />
           </Button>
         </Link>
         </div>

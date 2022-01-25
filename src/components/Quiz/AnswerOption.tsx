@@ -9,7 +9,7 @@ interface AnswerOptProps {
   answerState: IAnswerState | null,
 }
 
-const AnswerOption = ({ className, text, answerClick, id, answerState}:AnswerOptProps) => {
+const AnswerOption: React.FC<AnswerOptProps> = ({ className, text, answerClick, id, answerState}) => {
   const onOptionClickHandler = () => {
     answerClick(id)
   }
