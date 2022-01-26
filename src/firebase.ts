@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, child, get, push } from 'firebase/database';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore, collection, setDoc, doc, getDocs, query, orderBy, limit, startAfter } from "firebase/firestore";
+
 
 import { IQuizData, IQuizzes } from './types'
 
@@ -17,44 +17,83 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
-const db = getDatabase(app)
+const db = getDatabase()
+const fs = getFirestore()
 
 export const writeQuiz = (quiz: IQuizData):void => {
-  set(ref(db, 'quizzes/' + quiz._id), quiz)
+  setDoc(doc(fs, 'quizzes', quiz._id), quiz);
 }
 
-export const getQuizzes = async ():Promise<IQuizzes> => {
-  const snapshot = await get(child(ref(db), 'quizzes/'))
+export const getDocuments = async () => {
+  const first = query(collection(fs, "QuizData"),
+  orderBy('id'),
+  limit(2));
+  const documentSnapshots = await getDocs(first);
 
-  const data:IQuizzes = {}
+  const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
+  console.log("last", lastVisible.data());
+
+  const next = query(collection(fs, "QuizData"),
+  orderBy('id'),
+  startAfter(lastVisible),
+  limit(2));
+
+  const documentSnapshots2 = await getDocs(next);
+  const lastVisible2 = documentSnapshots2.docs[documentSnapshots2.docs.length-1];
+  console.log("last2", lastVisible2.data());
+}
+
+export const getQuizzes = async (lastQuiz: object | null):Promise<any> => {
+  let myQuery
+  console.log('isLastquiz',!!lastQuiz)
+  if (lastQuiz) {
+    myQuery = query(collection(fs, "quizzes"),
+    orderBy('createdAt', 'desc'),
+    startAfter(lastQuiz),
+    limit(2));
+  } else {
+    myQuery = query(collection(fs, "quizzes"),
+    orderBy('createdAt', 'desc'),
+    limit(2));
+  }
+
+  const snapshot:any = await getDocs(myQuery);
+  const data:any = {}
+  let setLastQuiz:any = null
   try {
-    if (snapshot.exists()) {
-      const response = snapshot.val()
-      for (let id in response) {
-        data[id] = response[id]
-      }
-    } else {
-      console.log('No data available')
-    }
+    snapshot.forEach((doc:any) => {
+      const document = doc.data()
+      console.log(document)
+      data[document._id] = document
+    })
+    setLastQuiz = snapshot.docs[snapshot.docs.length - 1]
   } catch(err) {
     console.error(err)
   }
-  return data
+
+  return {
+    data,
+    lastQuiz: setLastQuiz,
+  }
 }
 
-// export const getQuizFromId = async (id: string | undefined) => {
-//   if (typeof id !== 'string') {
-//     return 'Укажите id'
-//   }
+// export const getQuizzes = async ():Promise<IQuizzes> => {
+//   const snapshot = await get(child(ref(db), 'quizzes/'))
 
-//   const dbRef = ref(getDatabase());
-//   const snapshot = await get(child(dbRef, `quizzes/${id}`))
-
-//   if (snapshot.exists()) {
-//     return snapshot.val()
-//   } else {
-//     return 'no data'
+//   const data:IQuizzes = {}
+//   try {
+//     if (snapshot.exists()) {
+//       const response = snapshot.val()
+//       for (let id in response) {
+//         data[id] = response[id]
+//       }
+//     } else {
+//       console.log('No data available')
+//     }
+//   } catch(err) {
+//     console.error(err)
 //   }
+//   return data
 // }

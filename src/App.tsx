@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { IoListOutline, IoConstructOutline } from 'react-icons/io5'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 
 import { fetchQuizzes } from './redux/actions/quizzes'
@@ -32,11 +32,15 @@ const paths: IPath[] = [
 
 const App: React.FC = () => {
   const dispatch = useDispatch()
+  const lastQuiz = useSelector((state:any) => state.lastQuiz)
 
   useEffect(() => {
-    dispatch(fetchQuizzes())
+    dispatch(fetchQuizzes(lastQuiz))
   }, [])
 
+  const getMoreQuizzes = () => {
+    dispatch(fetchQuizzes(lastQuiz))
+  }
 
   return (
     <div className='page__wrapper'>
@@ -48,6 +52,7 @@ const App: React.FC = () => {
           <Route path='/quiz/:id' element={<QuizPage />} />
         </Route>
       </Routes>
+      <button onClick={getMoreQuizzes}>more</button>
     </div>
   );
 }
