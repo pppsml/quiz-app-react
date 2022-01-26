@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import { FinishedQuiz, Quiz, StartMenu } from "../components";
+import { getQuizFromId } from "../firebase";
+import { setQuizIsLoaded } from "../redux/actions/quizzes";
 import { IQuiz, IQuizzesState } from '../types'
 
 const initQuiz = [
@@ -38,17 +40,18 @@ const initialQuiz:IQuiz = {
 }
 
 const QuizPage:React.FC = () => {
+  const dispatch = useDispatch()
   const { id } = useParams()
   const [ quiz, setQuiz ] = useState(initialQuiz)
 
-  const quizData = useSelector(({quizzes}:IQuizzesState) => {
-    if (id) return quizzes.items[id]
-  })
-  const isLoaded = useSelector(({quizzes}:IQuizzesState) => quizzes.isLoaded)
+  const isLoaded = useSelector(({quizIsLoaded}:IQuizzesState) => quizIsLoaded)
 
   useEffect(() => {
-    setQuiz((prev: any) => ({...prev, ...quizData}))
-  }, [quizData])
+    if (id) getQuizFromId(id).then(data => {
+      setQuiz((prev: any) => ({...prev, ...data}))
+      dispatch(setQuizIsLoaded(true))
+    })
+  }, [id])
 
   const { finished, started, info, statistics, score, currentQuestion, answerState, createdAt } = quiz
 

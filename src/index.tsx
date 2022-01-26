@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 
 import App from './App';
-import { writeQuiz, getDocuments } from './firebase';
+import { writeQuiz } from './firebase';
 import store from './redux/store';
 
 import { IQuizzes } from './types';
@@ -288,8 +288,6 @@ export const quizzes: IQuizzes = {
 // for (let id in quizzes) {
 //   writeQuiz(quizzes[id])
 // };
-
-(window as any).getAllDocs = getDocuments;
 
 ReactDOM.render(
   <HashRouter>

@@ -52,9 +52,9 @@ export interface IQuiz {
 export interface IQuizzesState {
   quizzes: {
     items: IQuizzes,
-    isLoaded: boolean,
   },
   lastQuiz: object | null,
+  quizIsLoaded: boolean,
 }
 
 export interface action {
@@ -64,3 +64,4 @@ export interface action {
 
 export const SET_QUIZZES = 'SET_QUIZZES'
 export const SET_LASTQUIZ = 'SET_LASTQUIZ'
+export const SET_QUIZ_IS_LOADED = 'SET_QUIZ_IS_LOADED'
