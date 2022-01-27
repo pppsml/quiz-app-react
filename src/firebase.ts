@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, setDoc, doc, getDocs, getDoc, query, orderBy, limit, startAfter } from "firebase/firestore";
 
 
-import { IQuizData, IQuizzes } from './types'
+import { IQuizData, IFetchingQuizData } from './types'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -24,35 +24,35 @@ export const writeQuiz = (quiz: IQuizData):void => {
   setDoc(doc(db, 'quizzes', quiz._id), quiz);
 }
 
-export const getQuizzes = async (lastQuiz: object | null):Promise<any> => {
+export const getQuizzes = async (lastQuiz: object | null):Promise<IFetchingQuizData> => {
+  const itemsPerPage = 20
   let myQuery
   if (lastQuiz) {
     myQuery = query(collection(db, "quizzes"),
     orderBy('createdAt', 'asc'),
     startAfter(lastQuiz),
-    limit(3));
+    limit(itemsPerPage));
   } else {
     myQuery = query(collection(db, "quizzes"),
     orderBy('createdAt', 'asc'),
-    limit(3));
+    limit(itemsPerPage));
   }
 
   const snapshot:any = await getDocs(myQuery);
-  const data:any = {}
-  let setLastQuiz:any = null
-  try {
-    snapshot.forEach((doc:any) => {
-      const document = doc.data()
-      data[document._id] = document
-    })
-    setLastQuiz = snapshot.docs[snapshot.docs.length - 1]
-  } catch(err) {
-    console.error(err)
-  }
+  const data:any = []
+  let newLastQuiz = null
+
+  snapshot.forEach((doc:any) => {
+    data.push(doc.data())
+  })
+  newLastQuiz = snapshot.docs[snapshot.docs.length - 1]
 
   return {
     data,
-    lastQuiz: setLastQuiz,
+    lastQuiz: {
+      item: newLastQuiz,
+      hasMore: Object.keys(data).length === itemsPerPage,
+    }
   }
 }
 

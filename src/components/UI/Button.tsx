@@ -1,4 +1,5 @@
 import React from 'react'
+import { Style } from 'util'
 
 interface ButtonProps {
     className?: string,
@@ -6,9 +7,10 @@ interface ButtonProps {
     onClick?: () => void,
     outline?: boolean, 
     title?: string,
+    style?: object,
 }
 
-const Button: React.FC<ButtonProps> = ({children, className, onClick, outline, title}) => {
+const Button: React.FC<ButtonProps> = ({children, className, onClick, outline, title, style}) => {
     const classes = ['btn__styled']
     if ( className ) {
         classes.push(...className.split(' '))
@@ -18,6 +20,7 @@ const Button: React.FC<ButtonProps> = ({children, className, onClick, outline, t
         title={title}
         className={`${classes.join(' ')} ${outline ? 'btn__styled--outline' : ''}`} 
         onClick={onClick} 
+        style={style}
     >
         {children}
     </button>

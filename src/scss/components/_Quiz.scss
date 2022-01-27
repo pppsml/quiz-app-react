@@ -72,7 +72,7 @@
 .questionExample {
 	position: relative;
 
-	margin-bottom: 15px;
+	margin-bottom: 11px;
 
 	&__option--list {
 		list-style: none;
@@ -100,5 +100,23 @@
 		&::before {
 			display: none;
 		}
+	}
+}
+
+.finishedQuiz__question {
+	display: flex;
+	& .icon {
+		margin-left: 10px;
+		$iconSize: 25px;
+		width: $iconSize;
+		height: $iconSize;
+	}
+
+	&.error .icon {
+		color: red;
+	}
+
+	&.correct .icon {
+		color: green;
 	}
 }

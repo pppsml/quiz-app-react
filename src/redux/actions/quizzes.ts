@@ -1,25 +1,23 @@
-import { IQuizzes, SET_QUIZZES, SET_LASTQUIZ, SET_QUIZ_IS_LOADED, action } from "../../types"
+import { IQuizData, IFetchingQuizData, SET_QUIZZES, SET_LASTQUIZ, action } from "../../types"
 import { getQuizzes } from '../../firebase'
 
-export const setQuizzes = (data: IQuizzes) => ({
+export const setQuizzes = (data:IQuizData[]):action => ({
   type: SET_QUIZZES,
   payload: data,
 })
 
-export const setLastQuiz = (lastQuiz: object | null) => ({
+export const setLastQuiz = (lastQuiz: object | null, hasMore: boolean):action => ({
   type: SET_LASTQUIZ,
-  payload: lastQuiz,
-})
-
-export const setQuizIsLoaded = (state:boolean = true) => ({
-  type: SET_QUIZ_IS_LOADED,
-  payload: state,
+  payload: {
+    item: lastQuiz,
+    hasMore,
+  },
 })
 
 export const fetchQuizzes = (lastQuiz: object | null = null) => (dispatch:(action: action) => void) => {
   getQuizzes(lastQuiz)
-  .then((data) => {
-    dispatch(setLastQuiz(data.lastQuiz))
-    dispatch(setQuizzes(data.data))
+  .then(({data, lastQuiz}:IFetchingQuizData) => {
+    dispatch(setLastQuiz(lastQuiz.item, lastQuiz.hasMore))
+    dispatch(setQuizzes(data))
   })
 }

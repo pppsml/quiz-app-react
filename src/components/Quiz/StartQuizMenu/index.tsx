@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getText } from '../../functions';
+import { getDateFromTimestamp, getText } from '../../../functions';
 import { IQuestion, IQuizInfo, IQuizStatistics } from '../../../types'
 import { Button } from '../..';
 import { IoPlay } from 'react-icons/io5'
@@ -21,6 +21,7 @@ const StartMenu:React.FC<StartMenuProps> = ({createdAt, isLoaded, info, statisti
     return <LoadingStartMenu />
   }
 
+  const createdAtDate = getDateFromTimestamp(createdAt, 'ru')
   const likedText = getText(statistics.likes, ['раз', 'раза', 'раз'])
   const playedText = getText(statistics.played, ['раз', 'раза', 'раз'])
   const fewQuestions:IQuestion[] = [] 
@@ -51,12 +52,12 @@ const StartMenu:React.FC<StartMenuProps> = ({createdAt, isLoaded, info, statisti
         </div>
       </div>
       <div className='quizInfo-item text tar'>
-        <p>Создан: {createdAt}</p>
+        <p>Создан: {createdAtDate}</p>
         <p>Количество вопросов: {statistics?.numQuestions}</p>
-        <p>Понравилось: {statistics.likes} {likedText}</p>
         <p>Пройден: {statistics.played} {playedText}</p>
+        <p>Понравилось: {statistics.likes} {likedText}</p>
       </div>
-      <div className='buttonContainer jcc'>
+      <div className='buttonContainer'>
         <Button onClick={startQuiz}>
           <IoPlay className='icon' />
           Начать тест

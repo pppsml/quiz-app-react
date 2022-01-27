@@ -27,12 +27,12 @@ export interface IQuizData {
   _id: string,
 }
 
-export interface IQuizzes {
-  [ key:string ] : IQuizData,
-}
-
 export interface IAnswerState {
   [key: string]: 'correct' | 'error'
+}
+
+export interface IUserAnswers {
+  [ key: string ] : boolean
 }
 
 export interface IQuiz {
@@ -45,15 +45,20 @@ export interface IQuiz {
   currentQuestion: number,
   score: number,
   answerState: IAnswerState | null,
+  userAnswers: IUserAnswers,
 }
 
 
+export interface ILastQuiz {
+  item: object | null,
+  hasMore: boolean,
+}
 
 export interface IQuizzesState {
   quizzes: {
-    items: IQuizzes,
+    items: IQuizData[],
   },
-  lastQuiz: object | null,
+  lastQuiz: ILastQuiz,
   quizIsLoaded: boolean,
 }
 
@@ -62,6 +67,10 @@ export interface action {
   payload: any,
 }
 
+export interface IFetchingQuizData {
+  data: [],
+  lastQuiz: ILastQuiz,
+}
+
 export const SET_QUIZZES = 'SET_QUIZZES'
 export const SET_LASTQUIZ = 'SET_LASTQUIZ'
-export const SET_QUIZ_IS_LOADED = 'SET_QUIZ_IS_LOADED'

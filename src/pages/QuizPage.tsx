@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import { FinishedQuiz, Quiz, StartMenu } from "../components";
 import { getQuizFromId } from "../firebase";
-import { setQuizIsLoaded } from "../redux/actions/quizzes";
-import { IQuiz, IQuizzesState } from '../types'
+import { IQuiz } from '../types'
 
 const initQuiz = [
   {
@@ -36,24 +34,24 @@ const initialQuiz:IQuiz = {
   finished: false,
   currentQuestion: 0,
   answerState: null,
-  score: 0
+  score: 0,
+  userAnswers: {},
 }
 
 const QuizPage:React.FC = () => {
-  const dispatch = useDispatch()
   const { id } = useParams()
   const [ quiz, setQuiz ] = useState(initialQuiz)
-
-  const isLoaded = useSelector(({quizIsLoaded}:IQuizzesState) => quizIsLoaded)
+  const [ quizIsLoaded, setQuizIsLoaded ] = useState(false)
 
   useEffect(() => {
+    setQuizIsLoaded(false)
     if (id) getQuizFromId(id).then(data => {
       setQuiz((prev: any) => ({...prev, ...data}))
-      dispatch(setQuizIsLoaded(true))
+      setQuizIsLoaded(true)
     })
   }, [id])
 
-  const { finished, started, info, statistics, score, currentQuestion, answerState, createdAt } = quiz
+  const { finished, started, info, statistics, score, currentQuestion, answerState, createdAt, userAnswers } = quiz
 
   
   const getAnswer = (answerId:number) => {
@@ -63,6 +61,10 @@ const QuizPage:React.FC = () => {
         ...prev,
         answerState: {
           [answerId]: isCorrect ? 'correct' : 'error'
+        },
+        userAnswers: {
+          ...prev.userAnswers,
+          [currentQuestion]: isCorrect
         },
         score: isCorrect ? prev.score + 1 : prev.score
       }))
@@ -85,10 +87,21 @@ const QuizPage:React.FC = () => {
   }
 
   const finishQuiz = ():void => {
-    // todo 
     setQuiz(prev => ({
       ...prev,
       finished: true,
+    }))
+  }
+
+  const retryQuiz = ():void => {
+    setQuiz(prev => ({
+      ...prev,
+      started: false,
+      finished: false,
+      currentQuestion: 0,
+      answerState: null,
+      score: 0,
+      userAnswers: {},
     }))
   }
 
@@ -105,11 +118,11 @@ const QuizPage:React.FC = () => {
     <div className="main__content">
       <div className="quiz__container">
 
-        {isLoaded && <h2 className="text title">{info.name}</h2>}
+        {quizIsLoaded && <h2 className="text title">{info.name}</h2>}
         {id 
         ? !started 
           ? <StartMenu 
-            isLoaded={isLoaded}
+            isLoaded={quizIsLoaded}
             createdAt={createdAt}
             info={info}
             statistics={statistics}
@@ -123,7 +136,13 @@ const QuizPage:React.FC = () => {
               getAnswer={getAnswer}
               answerState={answerState}
             />
-          : <FinishedQuiz score={score} numQuestions={statistics.numQuestions} info={info} />
+          : <FinishedQuiz 
+            score={score} 
+            numQuestions={statistics.numQuestions} 
+            info={info} 
+            retryQuiz={retryQuiz}
+            userAnswers={userAnswers}
+          />
         : 'Выбери тест'}
 
       </div>

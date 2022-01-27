@@ -7,11 +7,9 @@ import App from './App';
 import { writeQuiz } from './firebase';
 import store from './redux/store';
 
-import { IQuizzes } from './types';
-
-export const quizzes: IQuizzes = {
-  "gaAsW0": {
-    createdAt: 1642484588647,
+const createQuiz = () => {
+  return{
+    createdAt: Date.now() + Math.floor(Math.random() * 10),
     info: {
       name: 'Имеешь ли ты зрение',
       questions: [
@@ -59,235 +57,16 @@ export const quizzes: IQuizzes = {
     },
     statistics: {
       numQuestions: 4,
-      likes: 0,
-      played: 0,
+      likes: Math.floor(Math.random() * 1000),
+      played: Math.floor(Math.random() * 1000),
     },
-    _id: 'gaAsW0'
-  },
-  "AFhas123": {
-    createdAt: 1642484588648,
-    info: {
-      name: 'Закончил ли ты первый класс?',
-      questions: [
-        {
-          text: 'Чему равно 2+2?',
-          options: [
-            {text: '4', id: 1},
-            {text: '6-2', id: 2},
-            {text: '0+4', id: 3},
-            {text: 'Желтый', id: 4},
-          ],
-          correct: 1 // множественный выбор
-        },
-        {
-          text: 'Сколько всего цифр?',
-          options: [
-            {text: 'Много', id: 1},
-            {text: 'Бесконечно', id: 2},
-            {text: '10', id: 3},
-            {text: '99', id: 4},
-          ],
-          correct: 3
-        },
-        {
-          text: 'Как пишется жы-ши?',
-          options: [
-            {text: 'жы-ши пиши от душы', id: 1},
-            {text: 'жи-ши пиши через "И"', id: 2},
-            {text: 'жы-шы пишы через "Ы"', id: 3},
-          ],
-          correct: 2
-        },
-      ],
-    },
-    statistics: {
-      numQuestions: 3,
-      likes: 15,
-      played: 14,
-    },
-    _id: 'AFhas123'
-  },
-  "AFhas1234": {
-    createdAt: 1642484588649,
-    info: {
-      name: 'Закончил ли ты первый класс?',
-      questions: [
-        {
-          text: 'Чему равно 2+2?',
-          options: [
-            {text: '4', id: 1},
-            {text: '6-2', id: 2},
-            {text: '0+4', id: 3},
-            {text: 'Желтый', id: 4},
-          ],
-          correct: 1 // множественный выбор
-        },
-        {
-          text: 'Сколько всего цифр?',
-          options: [
-            {text: 'Много', id: 1},
-            {text: 'Бесконечно', id: 2},
-            {text: '10', id: 3},
-            {text: '99', id: 4},
-          ],
-          correct: 3
-        },
-        {
-          text: 'Как пишется жы-ши?',
-          options: [
-            {text: 'жы-ши пиши от душы', id: 1},
-            {text: 'жи-ши пиши через "И"', id: 2},
-            {text: 'жы-шы пишы через "Ы"', id: 3},
-          ],
-          correct: 2
-        },
-        {
-          text: 'Как пишется жы-ши?',
-          options: [
-            {text: 'жы-ши пиши от душы', id: 1},
-            {text: 'жи-ши пиши через "И"', id: 2},
-            {text: 'жы-шы пишы через "Ы"', id: 3},
-          ],
-          correct: 2
-        },
-        {
-          text: 'Как пишется жы-ши?',
-          options: [
-            {text: 'жы-ши пиши от душы', id: 1},
-            {text: 'жи-ши пиши через "И"', id: 2},
-            {text: 'жы-шы пишы через "Ы"', id: 3},
-          ],
-          correct: 2
-        },
-      ],
-    },
-    statistics: {
-      numQuestions: 5,
-      likes: 15,
-      played: 882,
-    },
-    _id: 'AFhas1234'
-  },
-  "AFhas12377": {
-    createdAt: 1642484588650,
-    info: {
-      name: 'Закончил ли ты первый класс?',
-      questions: [
-        {
-          text: 'Чему равно 2+2?',
-          options: [
-            {text: '4', id: 1},
-            {text: '6-2', id: 2},
-            {text: '0+4', id: 3},
-            {text: 'Желтый', id: 4},
-          ],
-          correct: 1 // множественный выбор
-        },
-        {
-          text: 'Сколько всего цифр?',
-          options: [
-            {text: 'Много', id: 1},
-            {text: 'Бесконечно', id: 2},
-            {text: '10', id: 3},
-            {text: '99', id: 4},
-          ],
-          correct: 3
-        },
-        {
-          text: 'Как пишется жы-ши?',
-          options: [
-            {text: 'жы-ши пиши от душы', id: 1},
-            {text: 'жи-ши пиши через "И"', id: 2},
-            {text: 'жы-шы пишы через "Ы"', id: 3},
-          ],
-          correct: 2
-        },
-        {
-          text: 'Как пишется жы-ши?',
-          options: [
-            {text: 'жы-ши пиши от душы', id: 1},
-            {text: 'жи-ши пиши через "И"', id: 2},
-            {text: 'жы-шы пишы через "Ы"', id: 3},
-          ],
-          correct: 2
-        },
-        {
-          text: 'Как пишется жы-ши?',
-          options: [
-            {text: 'жы-ши пиши от душы', id: 1},
-            {text: 'жи-ши пиши через "И"', id: 2},
-            {text: 'жы-шы пишы через "Ы"', id: 3},
-          ],
-          correct: 2
-        },
-        {
-          text: 'Как пишется жы-ши?',
-          options: [
-            {text: 'жы-ши пиши от душы', id: 1},
-            {text: 'жи-ши пиши через "И"', id: 2},
-            {text: 'жы-шы пишы через "Ы"', id: 3},
-          ],
-          correct: 2
-        },
-        {
-          text: 'Как пишется жы-ши?',
-          options: [
-            {text: 'жы-ши пиши от душы', id: 1},
-            {text: 'жи-ши пиши через "И"', id: 2},
-            {text: 'жы-шы пишы через "Ы"', id: 3},
-          ],
-          correct: 2
-        },
-        {
-          text: 'Как пишется жы-ши?',
-          options: [
-            {text: 'жы-ши пиши от душы', id: 1},
-            {text: 'жи-ши пиши через "И"', id: 2},
-            {text: 'жы-шы пишы через "Ы"', id: 3},
-          ],
-          correct: 2
-        },
-        {
-          text: 'Как пишется жы-ши?',
-          options: [
-            {text: 'жы-ши пиши от душы', id: 1},
-            {text: 'жи-ши пиши через "И"', id: 2},
-            {text: 'жы-шы пишы через "Ы"', id: 3},
-          ],
-          correct: 2
-        },
-        {
-          text: 'Как пишется жы-ши?',
-          options: [
-            {text: 'жы-ши пиши от душы', id: 1},
-            {text: 'жи-ши пиши через "И"', id: 2},
-            {text: 'жы-шы пишы через "Ы"', id: 3},
-          ],
-          correct: 2
-        },
-        {
-          text: 'Как пишется жы-ши?',
-          options: [
-            {text: 'жы-ши пиши от душы', id: 1},
-            {text: 'жи-ши пиши через "И"', id: 2},
-            {text: 'жы-шы пишы через "Ы"', id: 3},
-          ],
-          correct: 2
-        },
-      ],
-    },
-    statistics: {
-      numQuestions: 11,
-      likes: 23,
-      played: 873,
-    },
-    _id: 'AFhas12377'
-  },
-};
+    _id: `ajsdhkauwekasd${Math.floor(Math.random() * 1000)}`
+  }
+}
 
-// for (let id in quizzes) {
-//   writeQuiz(quizzes[id])
-// };
+// for (let i = 0; i < 50; i++) {
+//   writeQuiz(createQuiz())
+// }
 
 ReactDOM.render(
   <HashRouter>
