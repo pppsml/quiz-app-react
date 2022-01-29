@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, setDoc, doc, getDocs, getDoc, query, orderBy, limit, startAfter } from "firebase/firestore";
+import { getFirestore, collection, setDoc, doc, updateDoc, getDocs, getDoc, query, orderBy, limit, startAfter, increment } from "firebase/firestore";
 
 
 import { IQuizData, IFetchingQuizData } from './types'
@@ -58,4 +58,9 @@ export const getQuizzes = async (lastQuiz: object | null):Promise<IFetchingQuizD
 
 export const getQuizFromId = async (id: string) => {
   return (await getDoc(doc(db, "quizzes", id))).data()
+}
+
+export const increasePlayedCount = (id: string, quizData: any):void => {
+  const quizRef = doc(db, 'quizzes', id)
+  updateDoc(quizRef, quizData);
 }

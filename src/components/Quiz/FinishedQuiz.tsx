@@ -25,7 +25,7 @@ const FinishedQuiz:React.FC<FinishedQuizProps> = ({score, numQuestions, info, us
         <ul>
           {
             Object.keys(userAnswers).map((num:any, index) => (
-              <div key={numQuestions + '' + index} className={`finishedQuiz__question ${userAnswers[num] ? 'correct' : 'error'} text tal`}>
+              <div key={index} className={`finishedQuiz__question ${userAnswers[num] ? 'correct' : 'error'} text tal`}>
                 <span>{index + 1}. {info.questions[num].text}</span>
                 {userAnswers[num] ? <IoCheckmarkOutline className='icon' /> : <IoCloseOutline className='icon' />}
               </div>

@@ -9,20 +9,15 @@ import { Button } from '.'
 
 interface ListItemProps {
   quizData: IQuizData,
-  likeQuiz: (id: string) => void,
 }
 
-const QuizListItem: React.FC<ListItemProps> = ({quizData, likeQuiz}) => {
+const QuizListItem: React.FC<ListItemProps> = ({quizData}) => {
   const {createdAt, info, statistics, _id} = quizData
 
   // TODO createdAt to date
 
   const playedText = getText(statistics.played, ['раз', 'раза', 'раз'])
   const numQuestionsText = getText(statistics.numQuestions, ['вопрос', 'вопроса', 'вопросов'])
-
-  const onLikeQuiz = () => {
-    likeQuiz(_id)
-  }
 
   return (
     <li className='quizListItem'>
@@ -33,18 +28,13 @@ const QuizListItem: React.FC<ListItemProps> = ({quizData, likeQuiz}) => {
         <p className='quizListItem-info__item'> <IoHeartOutline className='icon' /> <span>{statistics.likes}</span> </p>
       </div>
       <div className='quizListItem__bottom'>
-        <div></div>
-        <div className='buttonContainer'>
-        <Button onClick={onLikeQuiz} outline title='Поставить отметку "Нравится"'>
-          <IoHeartOutline className='icon' />
-          <span>Нравится</span>
-        </Button>
+        <div></div> 
         <Link className='link' to={`/quiz/${_id}`} >
           <Button title='Пройти тест'>
             <IoPlay className='icon' />
+            <span>Пройти тест</span>
           </Button>
         </Link>
-        </div>
       </div>
     </li>
   )

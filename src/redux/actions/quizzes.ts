@@ -1,4 +1,4 @@
-import { IQuizData, IFetchingQuizData, SET_QUIZZES, SET_LASTQUIZ, action } from "../../types"
+import { IQuizData, IFetchingQuizData, SET_QUIZZES, SET_LASTQUIZ, SET_RESETTED_QUIZZES, action } from "../../types"
 import { getQuizzes } from '../../firebase'
 
 export const setQuizzes = (data:IQuizData[]):action => ({
@@ -13,6 +13,10 @@ export const setLastQuiz = (lastQuiz: object | null, hasMore: boolean):action =>
     hasMore,
   },
 })
+
+export const setResettedQuizzes = {
+  type: SET_RESETTED_QUIZZES,
+}
 
 export const fetchQuizzes = (lastQuiz: object | null = null) => (dispatch:(action: action) => void) => {
   getQuizzes(lastQuiz)

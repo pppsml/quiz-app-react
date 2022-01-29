@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { FinishedQuiz, Quiz, StartMenu } from "../components";
-import { getQuizFromId } from "../firebase";
+import { getQuizFromId, increasePlayedCount } from "../firebase";
 import { IQuiz } from '../types'
 
 const initQuiz = [
@@ -30,12 +30,14 @@ const initialQuiz:IQuiz = {
     played: 0,
   },
   _id: 'a0',
+
   started: false,
   finished: false,
   currentQuestion: 0,
   answerState: null,
   score: 0,
   userAnswers: {},
+  tryCount: 0,
 }
 
 const QuizPage:React.FC = () => {
@@ -49,11 +51,12 @@ const QuizPage:React.FC = () => {
       setQuiz((prev: any) => ({...prev, ...data}))
       setQuizIsLoaded(true)
     })
-  }, [id])
+  }, [id, quiz.tryCount])
 
   const { finished, started, info, statistics, score, currentQuestion, answerState, createdAt, userAnswers } = quiz
 
-  
+
+
   const getAnswer = (answerId:number) => {
     if (!quiz.answerState) {
       const isCorrect = answerId === info?.questions[currentQuestion].correct
@@ -78,7 +81,7 @@ const QuizPage:React.FC = () => {
       }, 1.5e3)
     }
   }
-  
+
   const startQuiz = ():void => {
     setQuiz(prev => ({
       ...prev,
@@ -91,6 +94,23 @@ const QuizPage:React.FC = () => {
       ...prev,
       finished: true,
     }))
+
+    if (id && !quiz.tryCount) {
+      const quizData = {
+        _id: id,
+        createdAt,
+        info,
+        statistics,
+      }
+      increasePlayedCount(id, {
+        ...quizData,
+        statistics: {
+          ...statistics,
+          played: statistics.played + 1
+        }
+      })
+    }
+
   }
 
   const retryQuiz = ():void => {
@@ -102,6 +122,7 @@ const QuizPage:React.FC = () => {
       answerState: null,
       score: 0,
       userAnswers: {},
+      tryCount: prev.tryCount + 1
     }))
   }
 
@@ -113,7 +134,7 @@ const QuizPage:React.FC = () => {
     }))
   }
 
-  // TODO сделать загрузку, старт, и финиш теста
+
   return (
     <div className="main__content">
       <div className="quiz__container">

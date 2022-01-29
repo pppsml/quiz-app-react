@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { fetchQuizzes } from '../redux/actions/quizzes'
+import { fetchQuizzes, setResettedQuizzes } from '../redux/actions/quizzes'
 import { Button, QuizListItem } from '../components'
 import { IoCloudDownloadOutline } from 'react-icons/io5'
 
@@ -18,16 +18,14 @@ const QuizList:React.FC = () => {
   const getMoreQuizzes = () => {
     if (hasMorePages) dispatch(fetchQuizzes(lastQuiz))
   }
-  
-  const likeQuiz = (id: string):void => {
-    // todo если не авторизован => страница авторизации иначе лайкнуть
-    console.log('Liked quiz with id: ', id)
-  }
-
 
   useEffect(() => {
     if (!lastQuiz) {
       dispatch(fetchQuizzes())
+    }
+
+    return () => {
+      dispatch(setResettedQuizzes)
     }
   }, [])
 
@@ -38,7 +36,7 @@ const QuizList:React.FC = () => {
         {
           items &&
           items.map((item:any) => (
-            <QuizListItem likeQuiz={likeQuiz} quizData={item} key={item._id} />
+            <QuizListItem quizData={item} key={item._id} />
           ))
         }
       </ul>

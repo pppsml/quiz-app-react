@@ -1,10 +1,12 @@
+import React from "react";
+
 export interface IQuizStatistics {
   numQuestions: number,
   played: number,
   likes: number,
 }
 
-interface IAnswerOption {
+export interface IAnswerOption {
   text: string,
   id: number,
 }
@@ -46,6 +48,7 @@ export interface IQuiz {
   score: number,
   answerState: IAnswerState | null,
   userAnswers: IUserAnswers,
+  tryCount: number
 }
 
 
@@ -72,5 +75,27 @@ export interface IFetchingQuizData {
   lastQuiz: ILastQuiz,
 }
 
+export interface IInputControlProps {
+  value: string,
+  type: React.HTMLInputTypeAttribute,
+  labelText?: string,
+  inlineLabel?: boolean
+  placeholder?: string,
+  errorMessage?: string,
+  valid?: boolean,
+  touched?: boolean,
+  validation?: {
+    required?: boolean,
+    minLength?: boolean,
+    pattern?: string,
+  },
+  map?: any
+}
+
+export interface IFormControls {
+  [key: string]: IInputControlProps | IInputControlProps[]
+}
+
 export const SET_QUIZZES = 'SET_QUIZZES'
 export const SET_LASTQUIZ = 'SET_LASTQUIZ'
+export const SET_RESETTED_QUIZZES = 'SET_RESETTED_QUIZZES'

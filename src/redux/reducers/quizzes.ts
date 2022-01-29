@@ -1,4 +1,4 @@
-import { SET_QUIZZES, action, SET_LASTQUIZ } from "../../types"
+import { action, SET_QUIZZES, SET_LASTQUIZ, SET_RESETTED_QUIZZES } from "../../types"
 
 import { IQuizzesState } from "../../types"
 
@@ -15,7 +15,7 @@ const initialState:IQuizzesState = {
 
 const quizzes = (state:IQuizzesState = initialState, action: action) => {
   switch (action.type) {
-    case SET_QUIZZES: 
+    case SET_QUIZZES:
       return {
         ...state,
         quizzes: {
@@ -28,6 +28,17 @@ const quizzes = (state:IQuizzesState = initialState, action: action) => {
         return {
           ...state,
           lastQuiz: action.payload,
+        }
+      case SET_RESETTED_QUIZZES:
+        return {
+          ...state,
+          quizzes: {
+            items: [],
+          },
+          lastQuiz: {
+            item: null,
+            hasMore: true,
+          },
         }
     default :
       return state
