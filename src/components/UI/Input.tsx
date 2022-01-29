@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 interface InputProps {
   className?: string,
@@ -18,10 +18,10 @@ interface InputProps {
   minLength?: number,
   maxLength?: number,
 
-  onChange?: (event:React.ChangeEvent) => void
+  onChange?: (event:React.ChangeEvent<HTMLInputElement>) => void
 };
 
-const Input:React.FC<InputProps> = (props) => {
+const Input = memo(function Input (props:InputProps):any {
   const { 
     className,
     placeholder,
@@ -61,6 +61,6 @@ const Input:React.FC<InputProps> = (props) => {
       {invalid && <span className='input--error' >{errorMessage || 'Введите корректное значение'}</span>}
     </div>
   )
-}
+})
 
 export default Input;

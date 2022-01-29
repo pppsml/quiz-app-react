@@ -93,7 +93,10 @@ export interface IInputControlProps {
 }
 
 export interface IFormControls {
-  [key: string]: IInputControlProps | IInputControlProps[]
+  [key: string]: {
+    inputs: IInputControlProps[],
+    title?: string,
+  }
 }
 
 export const SET_QUIZZES = 'SET_QUIZZES'

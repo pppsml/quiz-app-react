@@ -19,6 +19,7 @@ const createAnswerInputControl = (count: number):IInputControlProps[] => {
       labelText: `${i + 1}.`,
       valid: false,
       touched: false,
+      inlineLabel: true,
       validation: {
         required: true,
       },
@@ -31,31 +32,44 @@ const createAnswerInputControl = (count: number):IInputControlProps[] => {
 const QuizConstructorItem:React.FC<QuizConstructorItemProps> = ({currentQuestion}) => {
   const [ answersInputsCount, setAnswersInputsCount ] = useState(3)
 
-  const formControls:IFormControls = {
+  const InitialFormControls:IFormControls = {
     question: {
-      value: '',
-      type: 'text',
-      labelText: `Вопрос №${currentQuestion}`,
-      placeholder: 'Введите текст вопроса',
-      valid: false,
-      touched: false,
-      validation: {
-        required: true,
-      }
+      inputs: [
+        {
+          value: '',
+          type: 'text',
+          labelText: `Вопрос №${currentQuestion}`,
+          placeholder: 'Введите текст вопроса',
+          valid: false,
+          touched: false,
+          validation: {
+            required: true,
+          }
+        },
+      ]
     },
-    answerOptions: createAnswerInputControl(answersInputsCount),
+    answerOptions: {
+      inputs: createAnswerInputControl(answersInputsCount),
+      title: 'Варианты ответов:',
+    },
     correctAnswer: {
-      value: '',
-      type: 'text',
-      labelText: `Номер правильного варианта ответа`,
-      valid: false,
-      touched: false,
-      validation: {
-        required: true,
-        pattern: `[1-${answersInputsCount}]`
-      }
-    }
+      inputs: [
+        {
+          value: '',
+          type: 'number',
+          labelText: `Номер правильного варианта ответа`,
+          valid: false,
+          touched: false,
+          validation: {
+            required: true,
+            pattern: `[1-${answersInputsCount}]`
+          }
+        },
+      ]
+    },
   }
+
+  const [ formControls, setFormControls ] = useState(InitialFormControls)
 
   const incAnswerInputsCountClickHandler = ():void => {
     setAnswersInputsCount(prev => prev + 1)
@@ -65,39 +79,53 @@ const QuizConstructorItem:React.FC<QuizConstructorItemProps> = ({currentQuestion
     setAnswersInputsCount(prev => prev - 1)
   }
 
+  (window as any).incAnswers = incAnswerInputsCountClickHandler;
+  (window as any).decAnswers = decAnswerInputsCountClickHandler;
+
   const onFormSubmit = () => {
     console.log('submit')
   }
 
-  const onInputChangeHandler = (event: React.ChangeEvent, controlName: string, index?:number):void => {
-    console.log(event.target)
+  const onInputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, controlName: string, index:number):void => {
+    setFormControls(
+
+    (prev) => {
+      const newFormControls = {...prev}
+      const newControls = {...newFormControls[controlName]}
+      const newCurrInputControls = {...newControls.inputs[index]}
+
+      newCurrInputControls.value = event.target.value
+
+      newControls.inputs[index] = newCurrInputControls
+      newFormControls[controlName] = newControls
+
+      return newFormControls
+    }
+    )
   } 
 
-  console.log(formControls.answerOptions)
+  console.log(answersInputsCount)
 
   return (
     <form>
-      <Input 
-        labelText={`Вопрос №${currentQuestion}`}
-        placeholder='Введите текст вопроса'
-        minLength={5}
-        errorMessage='TEST'
-      />
-      <p className='text tal'>Варианты ответов:</p>
       {
-        formControls.answerOptions.map((controls:IInputControlProps, index:number) => {
-          console.log(controls)
-          return <Input
-            key={index}
-            type={controls.type}
-            value={controls.value}
-            valid={controls.valid}
-            touched={controls.touched}
-            labelText={controls.labelText}
-            shouldValidate={!!controls.validation}
-            errorMessage={controls.errorMessage}
-            onChange={(event) => onInputChangeHandler(event, 'answerOptions', index)}
-          />
+        Object.keys(formControls).map(controlName => {
+          if (Array.isArray(formControls[controlName].inputs)) {
+            return formControls[controlName].inputs.map((controls:any, index:number) => {
+              const key = `${controls.labelText}}`
+
+              return <React.Fragment key={index}>
+                {formControls[controlName].title 
+                && index === 0 
+                && <p className='text tal'>{formControls[controlName].title}</p>}
+                <Input
+                  key={key}
+                  {...controls}
+                  onChange={(event) => onInputChangeHandler(event, controlName, index)}
+                />
+              </React.Fragment>
+            })
+          }
         })
       }
     </form>
