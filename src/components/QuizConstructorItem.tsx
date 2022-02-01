@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { IoAddOutline, IoRemoveOutline } from 'react-icons/io5';
 import { Button, Input } from './';
 
-import { IFormControls, IInputControlProps } from '../types';
+import { IAnswerOption, IFormControls, IInputControlProps } from '../types';
 
 const createAnswerInputControl = (count: number = 1, label?: string): IInputControlProps[] => {
 	const inputControlsArr: IInputControlProps[] = [];
@@ -28,10 +28,17 @@ const createAnswerInputControl = (count: number = 1, label?: string): IInputCont
 	return inputControlsArr;
 };
 
+interface renderInputControls {
+  inputs: IInputControlProps[],
+  title?: string,
+}
+
 interface QuizConstructorItemProps {
 	currentQuestion: number;
 	createQuestion: ({}: any) => void;
 }
+
+
 
 const QuizConstructorItem: React.FC<QuizConstructorItemProps> = ({
 	currentQuestion,
@@ -117,11 +124,25 @@ const QuizConstructorItem: React.FC<QuizConstructorItemProps> = ({
 		}
 	};
 
-	const createQuestionClickHandler = (event: React.FormEvent<HTMLFormElement>) => {
+	const createQuestionClickHandler = (event: React.FormEvent<HTMLFormElement>):void => {
 		event.preventDefault();
-		const question = formEl.current!.querySelector('input[name="question"]').value.trim();
-		const correctAnswer = formEl.current!.querySelector('input[name="correctAnswer"]').value.trim();
-		console.log(correctAnswer);
+		const question:string = formEl.current!.querySelector('input[name="question"]').value.trim();
+		const correctAnswer:string = formEl.current!.querySelector('input[name="correctAnswer"]').value.trim();
+    const answerOptions:IAnswerOption[] = []
+
+    const answerInputs = formEl.current!.querySelectorAll('input[name="answerOpt"]')
+    answerInputs.forEach((input:HTMLInputElement, index:number) => {
+      answerOptions.push({
+        text: input.value,
+        id: index + 1,
+      })
+    })
+
+    createQuestion({
+      text: question,
+      options: answerOptions,
+      correct: correctAnswer,
+    })
 	};
 
 	const onInputChangeHandler = (
@@ -143,46 +164,46 @@ const QuizConstructorItem: React.FC<QuizConstructorItemProps> = ({
 		});
 	};
 
-	const controlButtons = (
-		<div className="buttonContainer centerContent" style={{ marginBottom: '10px' }}>
-			<Button circle style={{ width: 40, height: 40 }} onClick={incAnswerInputsCountClickHandler}>
+  const renderInputs = ( controlName:string, inputControls:renderInputControls ) => {
+    return inputControls.inputs.map((controls, index) => (
+      <React.Fragment key={index}>
+        {inputControls.title && index === 0 && <p className="text tal">{inputControls.title}</p>}
+        <Input 
+          key={controls.labelText}
+          {...controls}
+          onChange={(event) => onInputChangeHandler(event, controlName, index)}
+        />
+      </React.Fragment>
+    ))
+  }
+
+
+	return (
+		<form ref={formEl} id="constructorForm">
+
+      {renderInputs( 'question',formControls['question'])}
+      {renderInputs( 'answerOptions',formControls['answerOptions'])}
+
+      <div className="buttonContainer centerContent" style={{ marginBottom: '10px' }}>
+			<Button 
+        circle 
+        style={{ width: 40, height: 40 }} 
+        onClick={incAnswerInputsCountClickHandler}
+      >
 				<IoAddOutline className="icon" />
 			</Button>
 			<Button
 				circle
 				style={{ width: 40, height: 40 }}
 				onClick={decAnswerInputsCountClickHandler}
-				disabled={!(answersInputsCount - 1 >= minAnswersCount)}>
+				disabled={!(answersInputsCount - 1 >= minAnswersCount)}
+      >
 				<IoRemoveOutline className="icon" />
 			</Button>
 		</div>
-	);
 
-	return (
-		<form ref={formEl} id="constructorForm">
-			{Object.keys(formControls).map((controlName) => {
-				if (Array.isArray(formControls[controlName].inputs)) {
-					return formControls[controlName].inputs.map((controls: any, index: number) => {
-						const key = `${controls.labelText}}`;
+    {renderInputs( 'correctAnswer',formControls['correctAnswer'])}
 
-						return (
-							<React.Fragment key={index}>
-								{formControls[controlName].title && index === 0 && (
-									<p className="text tal">{formControls[controlName].title}</p>
-								)}
-								<Input
-									key={key}
-									{...controls}
-									onChange={(event) => onInputChangeHandler(event, controlName, index)}
-								/>
-								{controlName === 'answerOptions' &&
-									index === formControls[controlName].inputs.length - 1 &&
-									controlButtons}
-							</React.Fragment>
-						);
-					});
-				}
-			})}
 			<div className="buttonContainer endContent">
 				<Button title="Текущий вопрос не добавится" type="submit">
 					Закончить создание теста

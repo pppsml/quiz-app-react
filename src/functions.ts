@@ -1,3 +1,8 @@
+import { IInputControlProps } from './types'
+
+import { Input } from './components'
+import React from 'react'
+
 /**
  * 
  * @param num 

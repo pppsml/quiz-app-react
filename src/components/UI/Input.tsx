@@ -17,8 +17,6 @@ interface InputProps {
   required?: boolean,
   touched?: boolean
   errorMessage?: string,
-  minLength?: number,
-  maxLength?: number,
 
   onChange?: (event:React.ChangeEvent<HTMLInputElement>) => void
 };
@@ -41,8 +39,6 @@ const Input = memo(function Input (props:InputProps):any {
     required=false,
     touched,
     errorMessage,
-    minLength,
-    maxLength,
 
     onChange,
   } = props
