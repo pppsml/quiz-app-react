@@ -32,15 +32,31 @@
 			background-color: $primaryColor;
 		}
 	}
+	&--circle {
+		border-radius: 50%;
+	}
 
 	&:last-child {
 		margin-right: 0;
+	}
+
+	&:disabled {
+		background-color: #666;
+		cursor: default;
 	}
 }
 
 .buttonContainer {
 	display: flex;
 	flex-wrap: nowrap;
+	&.centerContent {
+		width: 100%;
+		justify-content: center;
+	}
+	&.endContent {
+		width: 100%;
+		justify-content: end;
+	}
 }
 
 .icon {

@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
 
 import { QuizConstructorItem } from '../components'
-import { IAnswerOption, IQuestion } from '../types'
+import { IQuestion } from '../types'
 
 interface IConstructorState {
   questions: IQuestion[],
+  name: string,
   currentQuestion : number,
 }
 
 const InitialState:IConstructorState = {
   questions: [],
+  name: '',
   currentQuestion: 0,
 }
 
@@ -27,7 +29,7 @@ const Constructor:React.FC = () => {
     <div className='main__content'>
       <h1 className='text title' >Создание теста</h1>
       <div className="quizConstructor">
-        <QuizConstructorItem currentQuestion={newQuiz.currentQuestion + 1} />
+        <QuizConstructorItem currentQuestion={newQuiz.currentQuestion + 1} createQuestion={createQuestion} />
       </div>
     </div>
   )

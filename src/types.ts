@@ -79,6 +79,7 @@ export interface IInputControlProps {
   value: string,
   type: React.HTMLInputTypeAttribute,
   labelText?: string,
+  name?: string,
   inlineLabel?: boolean
   placeholder?: string,
   errorMessage?: string,
