@@ -8,6 +8,7 @@ interface InputProps {
   type?: React.HTMLInputTypeAttribute,
   id?: string,
   inputTitle?: string,
+  hoverTitle?: string,
   inlineLabel?: boolean, // label will be in one line with input
 
   value?: string
@@ -31,6 +32,7 @@ const Input = memo(function Input (props:InputProps):any {
     id,
     inlineLabel,
     inputTitle,
+    hoverTitle,
     
     value,
     
@@ -43,25 +45,29 @@ const Input = memo(function Input (props:InputProps):any {
     onChange,
   } = props
 
-  const isValid = true
+  const isInvalid = !valid && shouldValidate && touched
   const htmlFor = id || `${type}-${Math.random()}`
 
   return (
     <>
       {inputTitle && <p className='text tal'>{inputTitle}</p>}
-      <div className={`input__wrapper ${!isValid ? 'invalid' : ''} ${inlineLabel ? 'inlineLabel' : ''}`}>
-        {labelText && <label className='input--label text' htmlFor={htmlFor}>{labelText}</label>}
+      <div 
+        className={`input__wrapper ${isInvalid ? 'invalid' : ''} ${inlineLabel ? 'inlineLabel' : ''} ${className ? className : ''}`} 
+        title={hoverTitle || ' '}
+      >
+        {labelText && <label className='input__label text' htmlFor={htmlFor}>{labelText}</label>}
         <input 
           id={htmlFor}
           type={type}
           name={name}
-          className={`input ${className ? className : ''}`}
+          className={`input ${type === 'radio' ? 'input__radio' : ''}`}
           required={required}
           value={value}
           placeholder={placeholder ? placeholder : ''}
           onChange={onChange}
         />
-        {!isValid && <span className='input--error' >{errorMessage || 'Введите корректное значение'}</span>}
+        { type === 'radio' && <label className='input__label text' htmlFor={htmlFor}></label> }
+        {isInvalid && type !== 'radio' && <span className='input__error' >{errorMessage || 'Введите корректное значение'}</span>}
       </div>
     </>
   )

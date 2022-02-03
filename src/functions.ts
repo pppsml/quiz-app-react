@@ -1,7 +1,4 @@
-import { IInputControlProps } from './types'
-
-import { Input } from './components'
-import React from 'react'
+import { IInputValidationControls } from './types'
 
 /**
  * 
@@ -48,4 +45,20 @@ export const getDateFromTimestamp = (timestamp: number, locale: 'ru' | 'en' = 'e
     case 'en':
       return `${formattedMonth}-${formattedDay}-${fullYear} ${formattedHour}:${formattedMinute}`
   }
+}
+
+export const validateInput = (value:string, validation?:IInputValidationControls ):boolean => {
+  if (!validation) return true
+
+  let isValid = true
+
+  if (validation.required) {
+    isValid = value.trim() !== '' && isValid
+  }
+
+  if (validation.minLength) {
+    isValid = value.trim().replace(/ +/g, ' ').length >= validation.minLength && isValid
+  }
+
+  return isValid
 }

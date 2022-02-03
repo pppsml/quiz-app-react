@@ -13,6 +13,7 @@
 		font-size: 18px;
 
 		background-color: lighten($secondaryColor, 7%);
+
 		&:not(:first-child) {
 			margin-top: 5px;
 		}
@@ -23,8 +24,57 @@
 			outline: none;
 			border: 2px solid black;
 		}
+
+		&__radio {
+			display: none;
+			& + .input__label {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+				margin: 0;
+
+				$size: 15px;
+				width: $size;
+				height: $size;
+				border-radius: 50%;
+
+				box-shadow: 0 0 5px #555, 0 0 10px #555;
+
+				transition: box-shadow 0.2s ease-in-out;
+
+				cursor: pointer;
+				&:hover {
+					box-shadow: 0 0 5px #111, 0 0 10px #111;
+				}
+				&::before {
+					content: '';
+					display: none;
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					background-color: #444;
+
+					$size: 9px;
+					width: $size;
+					height: $size;
+					border-radius: 50%;
+				}
+			}
+			&:checked + .input__label {
+				cursor: default;
+				&:hover {
+					box-shadow: 0 0 5px #555, 0 0 10px #555;
+				}
+				&::before {
+					display: block;
+				}
+			}
+		}
 	}
-	.input--label {
+
+	.input__label {
 		width: auto;
 	}
 
@@ -32,17 +82,17 @@
 		display: flex;
 		align-items: center;
 		.input,
-		.input--label {
+		.input__label {
 			margin-top: 0;
 			margin-bottom: 0;
 		}
-		.input--label {
+		.input__label {
 			margin-left: 10px;
 			margin-right: 10px;
 		}
 	}
 
-	.input--error {
+	.input__error {
 		position: absolute;
 		left: 10px;
 		bottom: 0;
@@ -56,7 +106,10 @@
 
 	&.invalid {
 		margin-bottom: 25px;
-		& .input--label {
+		& .input {
+			border: 2px solid #cf2b38;
+		}
+		& .input__label {
 			color: #f01f30;
 		}
 	}

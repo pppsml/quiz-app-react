@@ -9,4 +9,21 @@
 	border: 2px solid #aaa;
 
 	padding: 10px;
+	&__answerOption {
+		margin-bottom: 20px;
+		display: flex;
+	}
+}
+
+.input__wrapper {
+	flex: 1 1 0;
+	margin-bottom: 0;
+	&.invalid {
+		margin-bottom: 5px;
+	}
+}
+
+.quizConstructor__radioInput {
+	flex: 0 0 30px;
+	height: 36px;
 }

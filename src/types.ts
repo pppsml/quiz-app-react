@@ -75,6 +75,12 @@ export interface IFetchingQuizData {
   lastQuiz: ILastQuiz,
 }
 
+export interface IInputValidationControls {
+  required?: boolean,
+  minLength?: number,
+  pattern?: string,
+}
+
 export interface IInputControlProps {
   value: string,
   type: React.HTMLInputTypeAttribute,
@@ -85,11 +91,7 @@ export interface IInputControlProps {
   errorMessage?: string,
   valid?: boolean,
   touched?: boolean,
-  validation?: {
-    required?: boolean,
-    minLength?: boolean,
-    pattern?: string,
-  },
+  validation?: IInputValidationControls,
   map?: any
 }
 

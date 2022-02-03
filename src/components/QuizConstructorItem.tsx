@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
 import { useState } from 'react';
 
-import { IoAddOutline, IoRemoveOutline } from 'react-icons/io5';
 import { Button, Input } from './';
 
 import { IAnswerOption, IFormControls, IInputControlProps } from '../types';
+import { validateInput } from '../functions';
 
 const createAnswerInputControl = (count: number = 1, label?: string): IInputControlProps[] => {
 	const inputControlsArr: IInputControlProps[] = [];
@@ -15,10 +15,11 @@ const createAnswerInputControl = (count: number = 1, label?: string): IInputCont
 			value: '',
 			type: 'text',
 			name: 'answerOpt',
-			labelText,
+			// labelText,
 			valid: false,
 			touched: false,
-			inlineLabel: true,
+			// inlineLabel: true,
+			errorMessage: 'Вариант ответа не может быть пустым',
 			validation: {
 				required: true,
 			},
@@ -44,8 +45,6 @@ const QuizConstructorItem: React.FC<QuizConstructorItemProps> = ({
 	currentQuestion,
 	createQuestion,
 }) => {
-	const minAnswersCount = 3;
-	const [answersInputsCount, setAnswersInputsCount] = useState(minAnswersCount);
 	const formEl: any = useRef(null);
 
 	const InitialFormControls: IFormControls = {
@@ -57,6 +56,7 @@ const QuizConstructorItem: React.FC<QuizConstructorItemProps> = ({
 					name: 'question',
 					labelText: `Вопрос №${currentQuestion}`,
 					placeholder: 'Введите текст вопроса',
+					errorMessage: 'Вопрос не может быть пустым',
 					valid: false,
 					touched: false,
 					validation: {
@@ -66,69 +66,60 @@ const QuizConstructorItem: React.FC<QuizConstructorItemProps> = ({
 			],
 		},
 		answerOptions: {
-			inputs: createAnswerInputControl(answersInputsCount),
+			inputs: createAnswerInputControl(4),
 			title: 'Варианты ответов:',
-		},
-		correctAnswer: {
-			inputs: [
-				{
-					value: '',
-					type: 'number',
-					name: 'correctAnswer',
-					labelText: `Номер правильного варианта ответа`,
-					placeholder: `от 1 до ${answersInputsCount}`,
-					valid: false,
-					touched: false,
-					validation: {
-						required: true,
-						pattern: `[1-${answersInputsCount}]`,
-					},
-				},
-			],
 		},
 	};
 
 	const [formControls, setFormControls] = useState(InitialFormControls);
 
-	const incAnswerInputsCountClickHandler = (): void => {
-		setAnswersInputsCount((prev) => prev + 1);
-		setFormControls((prev) => {
-			const newFormControls = { ...prev };
-			const newControls = { ...newFormControls.answerOptions };
-			const newControlInputs = [
-				...newControls.inputs,
-				...createAnswerInputControl(1, `${answersInputsCount + 1}.`),
-			];
+	// const incAnswerInputsCountClickHandler = (): void => {
+	// 	setAnswersInputsCount((prev) => prev + 1);
+	// 	setFormControls((prev) => {
+	// 		const newFormControls = { ...prev };
+	// 		const newAnswerControls = { ...newFormControls.answerOptions };
+	// 		const newAnswerControlInputs = [
+	// 			...newAnswerControls.inputs,
+	// 			...createAnswerInputControl(1, `${answersInputsCount + 1}.`),
+	// 		];
 
-			newControls.inputs = newControlInputs;
-			newFormControls.answerOptions = newControls;
+	// 		newAnswerControls.inputs = newAnswerControlInputs;
+	// 		newFormControls.answerOptions = newAnswerControls;
 
-			return newFormControls;
-		});
-	};
+	// 		return newFormControls;
+	// 	});
+	// };
 
-	const decAnswerInputsCountClickHandler = (): void => {
-		if (answersInputsCount - 1 >= minAnswersCount) {
-			setAnswersInputsCount((prev) => prev - 1);
-			setFormControls((prev) => {
-				const newFormControls = { ...prev };
-				const newControls = { ...newFormControls.answerOptions };
-				const newControlInputs = [...newControls.inputs];
-				newControlInputs.pop();
+	// const decAnswerInputsCountClickHandler = (): void => {
+	// 	if (answersInputsCount - 1 >= minAnswersCount) {
+	// 		setAnswersInputsCount((prev) => prev - 1);
+	// 		setFormControls((prev) => {
+	// 			const newFormControls = { ...prev };
+	// 			const newAnswerControls = { ...newFormControls.answerOptions };
+	// 			const newAnswerControlInputs = [...newAnswerControls.inputs];
+	// 			newAnswerControlInputs.pop();
 
-				newControls.inputs = newControlInputs;
-				newFormControls.answerOptions = newControls;
+	// 			newAnswerControls.inputs = newAnswerControlInputs;
+	// 			newFormControls.answerOptions = newAnswerControls;
 
-				return newFormControls;
-			});
-		}
-	};
+	// 			return newFormControls;
+	// 		});
+	// 	}
+	// };
 
 	const createQuestionClickHandler = (event: React.FormEvent<HTMLFormElement>):void => {
 		event.preventDefault();
 		const question:string = formEl.current!.querySelector('input[name="question"]').value.trim();
-		const correctAnswer:string = formEl.current!.querySelector('input[name="correctAnswer"]').value.trim();
+		let correct:string = ''
     const answerOptions:IAnswerOption[] = []
+		
+
+		const correctAnswerRadios = formEl.current!.querySelectorAll('input[name="correctAnswer"]');
+		correctAnswerRadios.forEach((input:HTMLInputElement) => {
+			if (input.checked) {
+				correct = input.id
+			}
+		})
 
     const answerInputs = formEl.current!.querySelectorAll('input[name="answerOpt"]')
     answerInputs.forEach((input:HTMLInputElement, index:number) => {
@@ -141,7 +132,7 @@ const QuizConstructorItem: React.FC<QuizConstructorItemProps> = ({
     createQuestion({
       text: question,
       options: answerOptions,
-      correct: correctAnswer,
+      correct,
     })
 	};
 
@@ -156,6 +147,8 @@ const QuizConstructorItem: React.FC<QuizConstructorItemProps> = ({
 			const newCurrInputControls = { ...newControls.inputs[index] };
 
 			newCurrInputControls.value = event.target.value;
+			newCurrInputControls.touched = true
+			newCurrInputControls.valid = validateInput(newCurrInputControls.value, newCurrInputControls.validation)
 
 			newControls.inputs[index] = newCurrInputControls;
 			newFormControls[controlName] = newControls;
@@ -164,15 +157,27 @@ const QuizConstructorItem: React.FC<QuizConstructorItemProps> = ({
 		});
 	};
 
-  const renderInputs = ( controlName:string, inputControls:renderInputControls ) => {
+  const renderInputs = ( controlName:string, inputControls:renderInputControls ):React.ReactElement[] => {
     return inputControls.inputs.map((controls, index) => (
       <React.Fragment key={index}>
         {inputControls.title && index === 0 && <p className="text tal">{inputControls.title}</p>}
-        <Input 
-          key={controls.labelText}
-          {...controls}
-          onChange={(event) => onInputChangeHandler(event, controlName, index)}
-        />
+				<div className='quizConstructor__answerOption' >
+					{controlName === 'answerOptions' 
+					&& <Input 
+						type='radio' 
+						className='quizConstructor__radioInput' 
+						hoverTitle='Отметить как правильный вариант ответа'
+						name='correctAnswer'
+						shouldValidate={false}
+						id={`${index + 1}`}
+					/>
+					}
+					<Input 
+						{...controls}
+						shouldValidate={!!controls.validation}
+						onChange={(event) => onInputChangeHandler(event, controlName, index)}
+					/>
+				</div>
       </React.Fragment>
     ))
   }
@@ -183,26 +188,6 @@ const QuizConstructorItem: React.FC<QuizConstructorItemProps> = ({
 
       {renderInputs( 'question',formControls['question'])}
       {renderInputs( 'answerOptions',formControls['answerOptions'])}
-
-      <div className="buttonContainer centerContent" style={{ marginBottom: '10px' }}>
-			<Button 
-        circle 
-        style={{ width: 40, height: 40 }} 
-        onClick={incAnswerInputsCountClickHandler}
-      >
-				<IoAddOutline className="icon" />
-			</Button>
-			<Button
-				circle
-				style={{ width: 40, height: 40 }}
-				onClick={decAnswerInputsCountClickHandler}
-				disabled={!(answersInputsCount - 1 >= minAnswersCount)}
-      >
-				<IoRemoveOutline className="icon" />
-			</Button>
-		</div>
-
-    {renderInputs( 'correctAnswer',formControls['correctAnswer'])}
 
 			<div className="buttonContainer endContent">
 				<Button title="Текущий вопрос не добавится" type="submit">
