@@ -82,15 +82,18 @@ export interface IInputValidationControls {
 }
 
 export interface IInputControlProps {
-  value: string,
-  type: React.HTMLInputTypeAttribute,
+  value?: string,
+  type?: React.HTMLInputTypeAttribute,
+  checked?: boolean,
   labelText?: string,
+  hoverTitle?: string,
   name?: string,
   inlineLabel?: boolean
   placeholder?: string,
   errorMessage?: string,
   valid?: boolean,
   touched?: boolean,
+  autoComplete?: 'on' | 'off'
   validation?: IInputValidationControls,
   map?: any
 }

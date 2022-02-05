@@ -23,6 +23,10 @@
 		background-color: darken($primaryColor, 100%);
 		color: lighten($primaryColor, 100%);
 	}
+	&:disabled {
+		background-color: #666;
+		cursor: default;
+	}
 	&--outline {
 		border: 1px solid $primaryColor;
 		color: $primaryColor;
@@ -31,6 +35,13 @@
 			color: $secondaryColor;
 			background-color: $primaryColor;
 		}
+		&:disabled {
+			border: 1px solid transparent;
+			background-color: #aaa;
+			&:hover {
+				color: $primaryColor;
+			}
+		}
 	}
 	&--circle {
 		border-radius: 50%;
@@ -38,11 +49,6 @@
 
 	&:last-child {
 		margin-right: 0;
-	}
-
-	&:disabled {
-		background-color: #666;
-		cursor: default;
 	}
 }
 

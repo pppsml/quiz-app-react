@@ -1,4 +1,4 @@
-import { IInputValidationControls } from './types'
+import { IFormControls, IInputControlProps, IInputValidationControls } from './types'
 
 /**
  * 
@@ -61,4 +61,32 @@ export const validateInput = (value:string, validation?:IInputValidationControls
   }
 
   return isValid
+}
+
+export const checkAllInputsOnValid = (formControls: IFormControls):boolean => {
+  let formIsValid = true
+
+  Object.keys(formControls).forEach((controlName:string) => {
+    formControls[controlName].inputs.forEach((inputControls:IInputControlProps) => {
+      if (!inputControls.valid) {
+        formIsValid = false
+      }
+    })
+  })
+
+  console.log(formIsValid)
+
+  return formIsValid
+}
+
+export const createFormControls = (controls:IInputControlProps, count:number = 1):IInputControlProps[] => {
+  const formControls:IInputControlProps[] = []
+
+  for (let i = 0; i < count; i++) {
+    formControls.push({
+      ...controls
+    })
+  }
+
+  return formControls
 }

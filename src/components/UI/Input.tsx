@@ -10,6 +10,7 @@ interface InputProps {
   inputTitle?: string,
   hoverTitle?: string,
   inlineLabel?: boolean, // label will be in one line with input
+  autoComplete?: 'on' | 'off',
 
   value?: string
   
@@ -30,14 +31,15 @@ const Input = memo(function Input (props:InputProps):any {
     labelText,
     type = 'text',
     id,
-    inlineLabel,
+    inlineLabel = false,
     inputTitle,
     hoverTitle,
+    autoComplete = 'on',
     
-    value,
+    value = '',
     
-    shouldValidate,
-    valid,
+    shouldValidate = false,
+    valid = true,
     required=false,
     touched,
     errorMessage,
@@ -57,6 +59,7 @@ const Input = memo(function Input (props:InputProps):any {
       >
         {labelText && <label className='input__label text' htmlFor={htmlFor}>{labelText}</label>}
         <input 
+          autoComplete={autoComplete}
           id={htmlFor}
           type={type}
           name={name}
