@@ -78,7 +78,7 @@ export interface IFetchingQuizData {
 export interface IInputValidationControls {
   required?: boolean,
   minLength?: number,
-  pattern?: string,
+  regExp?: RegExp,
 }
 
 export interface IInputControlProps {

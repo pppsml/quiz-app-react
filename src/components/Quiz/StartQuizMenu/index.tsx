@@ -26,7 +26,9 @@ const StartMenu:React.FC<StartMenuProps> = ({createdAt, isLoaded, info, statisti
   const playedText = getText(statistics.played, ['раз', 'раза', 'раз'])
   const fewQuestions:IQuestion[] = [] 
 
-  for (let i = 0; i < 2; i++) {
+  const fewQuestionsCount = info.questions.length > 1 ? 2 : 1
+
+  for (let i = 0; i < fewQuestionsCount; i++) {
     fewQuestions.push(info.questions[i])
   }
 

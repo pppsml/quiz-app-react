@@ -47,34 +47,50 @@ export const getDateFromTimestamp = (timestamp: number, locale: 'ru' | 'en' = 'e
   }
 }
 
-export const validateInput = (value:string, validation?:IInputValidationControls ):boolean => {
-  if (!validation) return true
+interface validateInputsReturns {
+  isValid: boolean,
+  errorMessage?: string
+}
+
+export const validateInput = (value:string, validation?:IInputValidationControls ):validateInputsReturns => {
+  if (!validation) return {
+    isValid: true,
+  }
 
   let isValid = true
+  let errorMessage:any = ''
 
   if (validation.required) {
-    isValid = value.trim() !== '' && isValid
+    isValid = !!value.trim() && isValid
+    errorMessage = !isValid && 'Поле не может быть пустым'
   }
 
   if (validation.minLength) {
     isValid = value.trim().replace(/ +/g, ' ').length >= validation.minLength && isValid
+    errorMessage = !isValid && errorMessage || `Минимальное количество символов: ${validation.minLength}`
   }
 
-  return isValid
+  if (validation.regExp) {
+    // todo
+    console.log(validation.regExp)
+  }
+
+  return {
+    isValid,
+    errorMessage,
+  }
 }
 
-export const checkAllInputsOnValid = (formControls: IFormControls):boolean => {
+export const checkAllInputsOnValid = (formControls: IFormControls, controlNames: string[]):boolean => {
   let formIsValid = true
 
-  Object.keys(formControls).forEach((controlName:string) => {
+  controlNames.forEach((controlName:string) => {
     formControls[controlName].inputs.forEach((inputControls:IInputControlProps) => {
       if (!inputControls.valid) {
         formIsValid = false
       }
     })
   })
-
-  console.log(formIsValid)
 
   return formIsValid
 }
@@ -89,4 +105,15 @@ export const createFormControls = (controls:IInputControlProps, count:number = 1
   }
 
   return formControls
+}
+
+export const generateId = (timestamp:number, additionalLength:number):string => {
+  let id = timestamp.toString()
+  const startCharcodes:number[] = [65, 97]
+
+  for (let i = 0; i < additionalLength; i++) {
+    id += String.fromCharCode(startCharcodes[Math.floor(Math.random() * startCharcodes.length)] + Math.floor(Math.random() * 26))
+  }
+
+  return id
 }

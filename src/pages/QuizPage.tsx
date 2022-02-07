@@ -55,8 +55,6 @@ const QuizPage:React.FC = () => {
 
   const { finished, started, info, statistics, score, currentQuestion, answerState, createdAt, userAnswers } = quiz
 
-
-
   const getAnswer = (answerId:number) => {
     if (!quiz.answerState) {
       const isCorrect = answerId === info?.questions[currentQuestion].correct
