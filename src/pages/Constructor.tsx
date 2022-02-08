@@ -5,6 +5,7 @@ import { IQuestion, IAnswerOption, IFormControls, IInputControlProps, IQuizData 
 import { validateInput, checkAllInputsOnValid, createFormControls, generateId } from '../functions';
 
 import { writeQuiz } from '../firebase'
+import { useNavigate } from 'react-router-dom';
 
 interface renderInputControls {
   inputs: IInputControlProps[],
@@ -91,6 +92,7 @@ const Constructor:React.FC = () => {
 	};
 	
 	const formEl:any = useRef(null);
+  const navigate = useNavigate()
 
 	const [formIsValid, setFormIsValid] = useState(false)
 	const [formErrorMessage, setFormErrorMessage] = useState('')
@@ -110,6 +112,7 @@ const Constructor:React.FC = () => {
     event.preventDefault()
     const confirm = window.confirm('Вы действительно хотите закончить создание теста? Текущий вопрос не добавится. После создания вы будете перенаправлены на страницу со всеми тестами.')
     if (questions.length > 0 && quizName && confirm) {
+
       const timestamp = Date.now()
       const newQuizData:IQuizData = {
         createdAt: timestamp,
@@ -126,6 +129,10 @@ const Constructor:React.FC = () => {
       }
 
       writeQuiz(newQuizData)
+      const timeout = setTimeout(() => {
+        navigate('/')
+        clearTimeout(timeout)
+      }, .5e3)
     }
   }
 
