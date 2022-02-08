@@ -81,10 +81,10 @@ export const validateInput = (value:string, validation?:IInputValidationControls
   }
 }
 
-export const checkAllInputsOnValid = (formControls: IFormControls, controlNames: string[]):boolean => {
+export const checkAllInputsOnValid = (formControls: IFormControls, controlsForValidate: string[]):boolean => {
   let formIsValid = true
 
-  controlNames.forEach((controlName:string) => {
+  controlsForValidate.forEach((controlName:string) => {
     formControls[controlName].inputs.forEach((inputControls:IInputControlProps) => {
       if (!inputControls.valid) {
         formIsValid = false

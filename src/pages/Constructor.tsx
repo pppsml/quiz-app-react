@@ -105,6 +105,7 @@ const Constructor:React.FC = () => {
     setCorrectAnswer(0)
   }, [currentQuestion, quizName])
 
+
   const createQuiz = (event:React.FormEvent<HTMLFormElement>):void => {
     event.preventDefault()
     const confirm = window.confirm('Вы действительно хотите закончить создание теста? Текущий вопрос не добавится. После создания вы будете перенаправлены на страницу со всеми тестами.')
@@ -129,6 +130,11 @@ const Constructor:React.FC = () => {
   }
 
   const createQuestion = ({text, options, correct}:IQuestion):void => {
+    if (!formIsValid) {
+      setFormErrorMessage('Заполните все поля')
+      return
+    }
+
     setQuiz(prev => {
       const {questions, currentQuestion} = prev
 
@@ -150,9 +156,8 @@ const Constructor:React.FC = () => {
     const quizName = formEl.current.querySelector('input[name="quizName"]').value.trim().replace(/ +/, ' ')
 
     if (!quizName) {
-      const errorMessage = 'Укажите название теста'
-			setFormErrorMessage(errorMessage)
-			throw console.warn(errorMessage)
+			setFormErrorMessage('Укажите название теста')
+      return
     }
     
 
@@ -172,9 +177,8 @@ const Constructor:React.FC = () => {
     const answerOptions:IAnswerOption[] = []
 
 		if (!correctAnswer) {
-			const errorMessage = 'Укажите правильный вариант ответа'
-			setFormErrorMessage(errorMessage)
-			throw console.warn(errorMessage)
+			setFormErrorMessage('Укажите правильный вариант ответа')
+      return
 		}
 
     const answerInputs = formEl.current!.querySelectorAll('input[name="answerOpt"]')
@@ -197,7 +201,7 @@ const Constructor:React.FC = () => {
 	const onInputChangeHandler = (
 		event: React.ChangeEvent<HTMLInputElement>,
 		controlName: string,
-    validityControlNames: string[],
+    controlsForValidate: string[],
 		index: number,
 	): void => {
 		setFormControls((prev) => {
@@ -217,7 +221,7 @@ const Constructor:React.FC = () => {
       if (formErrorMessage) {
         setFormErrorMessage('')
       }
-			setFormIsValid(checkAllInputsOnValid(newFormControls, validityControlNames))
+			setFormIsValid(checkAllInputsOnValid(newFormControls, controlsForValidate))
 
 			return newFormControls;
 		});
@@ -227,7 +231,7 @@ const Constructor:React.FC = () => {
     setCorrectAnswer(+event.target.value)
   }
 
-  const renderInputs = ( controlName:string, inputControls:renderInputControls, validityControlNames: string[]):React.ReactElement[] => {
+  const renderInputs = ( controlName:string, inputControls:renderInputControls, controlsForValidate: string[]):React.ReactElement[] => {
     return inputControls.inputs.map((controls, index) => (
       <React.Fragment key={index}>
         {inputControls.title && index === 0 && <p className="text tal">{inputControls.title}</p>}
@@ -236,7 +240,7 @@ const Constructor:React.FC = () => {
 						{...controls}
 						id={`answerOption-${index + 1}`}
 						shouldValidate={!!controls.validation}
-						onChange={(event) => onInputChangeHandler(event, controlName, validityControlNames, index)}
+						onChange={(event) => onInputChangeHandler(event, controlName, controlsForValidate, index)}
 					/>
 				</div>
       </React.Fragment>
@@ -257,11 +261,11 @@ const Constructor:React.FC = () => {
 
               {
                 formErrorMessage 
-                && <p className='error'>{formErrorMessage}</p>
+                && <p className='formErrorMessage'>{formErrorMessage}</p>
               }
               
               <div className='buttonContainer endContent'>
-                <Button outline onClick={setQuizName} disabled={!formIsValid}>Запомнить название</Button>
+                <Button outline onClick={setQuizName} disabled={!formIsValid} >Запомнить название</Button>
               </div>
             </>
 
@@ -287,14 +291,14 @@ const Constructor:React.FC = () => {
 
               {
                 formErrorMessage 
-                && <p className='error'>{formErrorMessage}</p>
+                && <p className='formErrorMessage'>{formErrorMessage}</p>
               }
 
               <div className="buttonContainer endContent">
-                <Button title="Текущий вопрос не добавится" type="submit" onClick={createQuiz} disabled={!(questions.length > 0)}>
+                <Button title="Текущий вопрос не добавится" type="button" onClick={createQuiz} disabled={!(questions.length > 0)}>
                   Закончить создание теста
                 </Button>
-                <Button outline type="submit" onClick={createQuestionClickHandler} disabled={!formIsValid}  >
+                <Button outline type="button" onClick={createQuestionClickHandler} disabled={!formIsValid}  >
                   Добавить текущий вопрос
                 </Button>
               </div>

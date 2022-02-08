@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
-import { FinishedQuiz, Quiz, StartMenu } from "../components";
+import { Button, FinishedQuiz, Quiz, StartMenu } from "../components";
 import { getQuizFromId, increasePlayedCount } from "../firebase";
 import { IQuiz } from '../types'
 
-const initQuiz = [
+const initQuestions = [
   {
     text: 'empty',
-    options: [{id: 1, text: 'empty'}, {id: 2, text: 'empty'}, {id: 3, text: 'empty'}],
+    options: [{id: 1, text: 'empty'}, {id: 2, text: 'empty'}, {id: 3, text: 'empty'}, {id: 4, text: 'empty'}],
     correct: 1,
   },
   {
     text: 'empty',
-    options: [{id: 1, text: 'empty'}, {id: 2, text: 'empty'}, {id: 3, text: 'empty'}],
+    options: [{id: 1, text: 'empty'}, {id: 2, text: 'empty'}, {id: 3, text: 'empty'}, {id: 4, text: 'empty'}],
     correct: 1,
   },
 ]
@@ -22,7 +23,7 @@ const initialQuiz:IQuiz = {
   createdAt: 0,
   info: {
     name: 'empty',
-    questions: initQuiz,
+    questions: initQuestions,
   },
   statistics: {
     likes: 0,
@@ -44,10 +45,17 @@ const QuizPage:React.FC = () => {
   const { id } = useParams()
   const [ quiz, setQuiz ] = useState(initialQuiz)
   const [ quizIsLoaded, setQuizIsLoaded ] = useState(false)
+  const [ quizLoadingError, setQuizLoadingError ] = useState(false)
 
   useEffect(() => {
     setQuizIsLoaded(false)
+    setQuizLoadingError(false)
     if (id) getQuizFromId(id).then(data => {
+      if (!data) {
+        setQuiz(prev => ({...prev}))
+        setQuizLoadingError(true)
+        setQuizIsLoaded(true)
+      }
       setQuiz((prev: any) => ({...prev, ...data}))
       setQuizIsLoaded(true)
     })
@@ -133,13 +141,39 @@ const QuizPage:React.FC = () => {
   }
 
 
+  if (!id) {
+    return (
+      <div className="main__content">
+        <div className="quiz__container">
+          <h1 className="text title tal">Тест не выбран</h1>
+          <Link className="link" to='/'>
+            <Button>К списку тестов</Button>
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  if (quizLoadingError) {
+    return (
+      <div className="main__content">
+      <div className="quiz__container">
+        <h1 className="text title tal">Теста с таким идентификатором не существует ({id})</h1>
+        <Link className="link" to='/'>
+          <Button>К списку тестов</Button>
+        </Link>
+      </div>
+    </div>
+    )
+  }
+
   return (
     <div className="main__content">
       <div className="quiz__container">
 
         {quizIsLoaded && <h2 className="text title">{info.name}</h2>}
-        {id 
-        ? !started 
+        {
+        !started 
           ? <StartMenu 
             isLoaded={quizIsLoaded}
             createdAt={createdAt}
@@ -162,7 +196,7 @@ const QuizPage:React.FC = () => {
             retryQuiz={retryQuiz}
             userAnswers={userAnswers}
           />
-        : 'Выбери тест'}
+        }
 
       </div>
     </div>
