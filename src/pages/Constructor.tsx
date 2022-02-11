@@ -98,6 +98,9 @@ const Constructor:React.FC = () => {
 	const [formErrorMessage, setFormErrorMessage] = useState('')
   const [correctAnswer, setCorrectAnswer] = useState(0)
 
+  type IQuestionType = 'single' | 'multiple' | undefined
+  const [questionType, setQuestionType]:[IQuestionType, Function] = useState(undefined)
+
 	const [formControls, setFormControls] = useState(InitialFormControls);
 
   useEffect(() => {
@@ -105,8 +108,11 @@ const Constructor:React.FC = () => {
     setFormErrorMessage('')
     setFormIsValid(false)
     setCorrectAnswer(0)
+    setQuestionType('single')
   }, [currentQuestion, quizName])
 
+
+  // quiz control functions
 
   const createQuiz = (event:React.FormEvent<HTMLFormElement>):void => {
     event.preventDefault()
@@ -136,7 +142,7 @@ const Constructor:React.FC = () => {
     }
   }
 
-  const createQuestion = ({text, options, correct}:IQuestion):void => {
+  const addQuestion = ({text, options, type, correct}:IQuestion):void => {
     if (!formIsValid) {
       setFormErrorMessage('Заполните все поля')
       return
@@ -148,6 +154,7 @@ const Constructor:React.FC = () => {
       const newQuestion = {
         text,
         options,
+        type,
         correct,
       }
       
@@ -177,8 +184,8 @@ const Constructor:React.FC = () => {
   }
 
 
-
-	const createQuestionClickHandler = (event: React.FormEvent<HTMLFormElement>):void => {
+  // event handlers
+	const addQuestionClickHandler = (event: React.FormEvent<HTMLFormElement>):void => {
 		event.preventDefault();
 		const question:string = formEl.current!.querySelector('input[name="question"]').value.trim();
     const answerOptions:IAnswerOption[] = []
@@ -197,9 +204,10 @@ const Constructor:React.FC = () => {
     })
 		
     if (formIsValid) {
-      createQuestion({
+      addQuestion({
         text: question,
         options: answerOptions,
+        type: questionType,
         correct: correctAnswer,
       })
     }
@@ -234,17 +242,29 @@ const Constructor:React.FC = () => {
 		});
 	};
 
-  const onSelectChangeHandler = (event:React.ChangeEvent<HTMLSelectElement>) => {
+  const onTypeSelectChangeHandler = (event:React.ChangeEvent<HTMLSelectElement>) => {
+    setQuestionType(event.target.value)
+  }
+
+  const onCorrectSelectChangeHandler = (event:React.ChangeEvent<HTMLSelectElement>) => {
     setCorrectAnswer(+event.target.value)
   }
+
+
 
   const renderInputs = ( controlName:string, inputControls:renderInputControls, controlsForValidate: string[]):React.ReactElement[] => {
     return inputControls.inputs.map((controls, index) => (
       <React.Fragment key={index}>
         {inputControls.title && index === 0 && <p className="text tal">{inputControls.title}</p>}
 				<div className='quizConstructor__answerOption' >
+          {
+            controlName === 'answerOptions'
+            && questionType === 'multiple' 
+            && <Input type='checkbox' />
+          }
 					<Input 
 						{...controls}
+            labelText={questionType === 'single' ? controls.labelText : ''}
 						id={`answerOption-${index + 1}`}
 						shouldValidate={!!controls.validation}
 						onChange={(event) => onInputChangeHandler(event, controlName, controlsForValidate, index)}
@@ -259,7 +279,7 @@ const Constructor:React.FC = () => {
       <h1 className='text title' >Создание теста</h1>
       <div className="quizConstructor">
 
-        <form ref={formEl} id="constructorForm">
+        <form onSubmit={event => {event.preventDefault()}} ref={formEl} id="constructorForm">
           {!quizName 
 
             /* если нет названия теста, выводится окно с инпутом для названия */
@@ -278,12 +298,21 @@ const Constructor:React.FC = () => {
 
             /* после того, как ввел название создаешь вопросы к тесту */
             : <>
+              <Select
+                labelText='Тип вопроса'
+                value={questionType}
+                onChange={onTypeSelectChangeHandler}
+                options={[
+                  {value: 'single',text: 'Один правильный ответ'},
+                  {value: 'multiple',text: 'Несколько правильных ответов'},
+                ]} 
+              />
               {renderInputs( 'question',formControls['question'], ['question', 'answerOptions'])}
               {renderInputs( 'answerOptions',formControls['answerOptions'], ['question', 'answerOptions'])}
 
               <Select
                 value={correctAnswer}
-                onChange={onSelectChangeHandler}
+                onChange={onCorrectSelectChangeHandler}
                 name='correctAnswer'
                 inlineLabel
                 labelText='Выберите правильный ответ'
@@ -305,7 +334,7 @@ const Constructor:React.FC = () => {
                 <Button title="Текущий вопрос не добавится" type="button" onClick={createQuiz} disabled={!(questions.length > 0)}>
                   Закончить создание теста
                 </Button>
-                <Button outline type="button" onClick={createQuestionClickHandler} disabled={!formIsValid}  >
+                <Button outline type="button" onClick={addQuestionClickHandler} disabled={!formIsValid}  >
                   Добавить текущий вопрос
                 </Button>
               </div>

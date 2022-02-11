@@ -14,6 +14,7 @@ export interface IAnswerOption {
 export interface IQuestion {
   text: string,
   options: IAnswerOption[],
+  type?: 'single' | 'multiple',
   correct: number | number[]
 }
 

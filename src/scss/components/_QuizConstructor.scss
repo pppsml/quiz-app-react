@@ -12,6 +12,12 @@
 	&__answerOption {
 		margin-bottom: 20px;
 		display: flex;
+		.input__wrapper {
+			flex: 1 1 0;
+			&:first-child:not(:last-child) {
+				flex: 0 0 30px;
+			}
+		}
 	}
 }
 

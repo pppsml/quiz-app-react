@@ -59,15 +59,16 @@ export const validateInput = (value:string, validation?:IInputValidationControls
 
   let isValid = true
   let errorMessage:any = ''
+  const formattedValue = value.trim().replace(/ +/g, ' ')
 
   if (validation.required) {
-    isValid = !!value.trim() && isValid
+    isValid = !!formattedValue && isValid
     errorMessage = !isValid && 'Поле не может быть пустым'
   }
 
   if (validation.minLength) {
-    isValid = value.trim().replace(/ +/g, ' ').length >= validation.minLength && isValid
-    errorMessage = !isValid && errorMessage || `Минимальное количество символов: ${validation.minLength}`
+    isValid = formattedValue.length >= validation.minLength && isValid
+    errorMessage = !isValid && errorMessage || `Минимальное количество символов: ${validation.minLength} (${formattedValue.length})`
   }
 
   if (validation.regExp) {

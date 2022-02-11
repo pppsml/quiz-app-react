@@ -4,17 +4,19 @@ import { useParams } from "react-router-dom";
 
 import { Button, FinishedQuiz, Quiz, StartMenu } from "../components";
 import { getQuizFromId, increasePlayedCount } from "../firebase";
-import { IQuiz } from '../types'
+import { IQuestion, IQuiz } from '../types'
 
-const initQuestions = [
+const initQuestions:IQuestion[] = [
   {
     text: 'empty',
     options: [{id: 1, text: 'empty'}, {id: 2, text: 'empty'}, {id: 3, text: 'empty'}, {id: 4, text: 'empty'}],
+    type: 'single',
     correct: 1,
   },
   {
     text: 'empty',
     options: [{id: 1, text: 'empty'}, {id: 2, text: 'empty'}, {id: 3, text: 'empty'}, {id: 4, text: 'empty'}],
+    type: 'single',
     correct: 1,
   },
 ]

@@ -29,7 +29,7 @@ const Select:React.FC<Props> = ({
 
   const htmlFor = id || `select-${Math.random()}`
 
-  return <div className={`select__wrapper ${inlineLabel ? 'inlineLabel' : ''} ${className}`} >
+  return <div className={`select__wrapper ${inlineLabel ? 'inlineLabel' : ''} ${className || ''}`} >
     {labelText && <label className='text' htmlFor={htmlFor}>{labelText}</label>}
     <select value={value} onChange={onChange} name={name || ''} id={htmlFor}>
       {options.map(({value, text}, index) => (
