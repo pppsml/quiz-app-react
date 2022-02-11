@@ -110,7 +110,7 @@ const Constructor:React.FC = () => {
 
   const createQuiz = (event:React.FormEvent<HTMLFormElement>):void => {
     event.preventDefault()
-    const confirm = window.confirm('Вы действительно хотите закончить создание теста? Текущий вопрос не добавится. После создания вы будете перенаправлены на страницу со всеми тестами.')
+    const confirm = window.confirm('Вы действительно хотите закончить создание теста?\nТекущий вопрос не добавится.\nПосле создания вы будете перенаправлены на страницу со всеми тестами.')
     if (questions.length > 0 && quizName && confirm) {
 
       const timestamp = Date.now()
