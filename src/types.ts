@@ -11,11 +11,16 @@ export interface IAnswerOption {
   id: number,
 }
 
+export interface ICorrectAnswers {
+  [key: string]: true
+}
+
+
 export interface IQuestion {
   text: string,
   options: IAnswerOption[],
-  type?: 'single' | 'multiple',
-  correct: number | number[]
+  type: 'single' | 'multiple' | undefined,
+  correct: ICorrectAnswers
 }
 
 export interface IQuizInfo {

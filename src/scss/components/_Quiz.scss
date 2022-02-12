@@ -38,6 +38,17 @@
 	&:last-child {
 		margin-bottom: 0;
 	}
+	&__wrapper {
+		display: flex;
+		margin-bottom: 20px;
+		& .input__wrapper {
+			flex: 0 0 35px;
+			margin: 0;
+		}
+		& .answerOption__label {
+			flex: 1 1 0;
+		}
+	}
 	&.correct {
 		background-color: rgba(0, 255, 0, 0.15);
 	}

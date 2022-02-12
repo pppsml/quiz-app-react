@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 
 import { Input, Button, Select } from '../components'
-import { IQuestion, IAnswerOption, IFormControls, IInputControlProps, IQuizData } from '../types';
+import { IQuestion, IAnswerOption, IFormControls, IInputControlProps, IQuizData, ICorrectAnswers } from '../types';
 import { validateInput, checkAllInputsOnValid, createFormControls, generateId } from '../functions';
 
 import { writeQuiz } from '../firebase'
@@ -34,8 +34,8 @@ const createAnswersFormControls = (count:number = 1):IInputControlProps[] => {
       name: 'answerOpt',
       errorMessage: 'Вариант ответа не может быть пустым',
       autoComplete: 'off',
-      labelText: `${i + 1}.`,
-      inlineLabel: true,
+      // labelText: `${i + 1}.`,
+      // inlineLabel: true,
       valid: false,
       touched: false,
       checked: false,
@@ -96,7 +96,7 @@ const Constructor:React.FC = () => {
 
 	const [formIsValid, setFormIsValid] = useState(false)
 	const [formErrorMessage, setFormErrorMessage] = useState('')
-  const [correctAnswer, setCorrectAnswer] = useState(0)
+  const [correctAnswers, setCorrectAnswers]:[ICorrectAnswers, Function] = useState({})
 
   type IQuestionType = 'single' | 'multiple' | undefined
   const [questionType, setQuestionType]:[IQuestionType, Function] = useState(undefined)
@@ -107,7 +107,7 @@ const Constructor:React.FC = () => {
     setFormControls(InitialFormControls)
     setFormErrorMessage('')
     setFormIsValid(false)
-    setCorrectAnswer(0)
+    setCorrectAnswers({})
     setQuestionType('single')
   }, [currentQuestion, quizName])
 
@@ -187,13 +187,19 @@ const Constructor:React.FC = () => {
   // event handlers
 	const addQuestionClickHandler = (event: React.FormEvent<HTMLFormElement>):void => {
 		event.preventDefault();
+
+    if (questionType === 'single' && Object.keys(correctAnswers).length === 0) {
+      setFormErrorMessage('Укажите правильный вариант ответа')
+      return
+    }
+
+    if (questionType === 'multiple' && Object.keys(correctAnswers).length < 2) {
+      setFormErrorMessage('Укажите несколько правильных вариантов ответа')
+      return
+    }
+
 		const question:string = formEl.current!.querySelector('input[name="question"]').value.trim();
     const answerOptions:IAnswerOption[] = []
-
-		if (!correctAnswer) {
-			setFormErrorMessage('Укажите правильный вариант ответа')
-      return
-		}
 
     const answerInputs = formEl.current!.querySelectorAll('input[name="answerOpt"]')
     answerInputs.forEach((input:HTMLInputElement, index:number) => {
@@ -208,7 +214,7 @@ const Constructor:React.FC = () => {
         text: question,
         options: answerOptions,
         type: questionType,
-        correct: correctAnswer,
+        correct: correctAnswers,
       })
     }
 	};
@@ -246,8 +252,15 @@ const Constructor:React.FC = () => {
     setQuestionType(event.target.value)
   }
 
-  const onCorrectSelectChangeHandler = (event:React.ChangeEvent<HTMLSelectElement>) => {
-    setCorrectAnswer(+event.target.value)
+  const onCorrectInputChangeHandler = (event:React.ChangeEvent<HTMLInputElement>) => {
+    const correctAnswersInputs = document.querySelectorAll('.input[name="correctAnswer"]:checked')
+    const newCorrectAnswers:ICorrectAnswers = {}
+
+    correctAnswersInputs.forEach((input:any) => {
+      newCorrectAnswers[input.value] = true
+    })
+
+    setCorrectAnswers(newCorrectAnswers)
   }
 
 
@@ -259,12 +272,18 @@ const Constructor:React.FC = () => {
 				<div className='quizConstructor__answerOption' >
           {
             controlName === 'answerOptions'
-            && questionType === 'multiple' 
-            && <Input type='checkbox' />
+            && <Input 
+              checked={correctAnswers[index + 1] || false}
+              type={questionType === 'multiple' ? 'checkbox' : 'radio'} 
+              className='quizConstructor__radioInput' 
+              name='correctAnswer' 
+              onChange={onCorrectInputChangeHandler}
+              value={`${index + 1}`}
+            />
           }
+
 					<Input 
 						{...controls}
-            labelText={questionType === 'single' ? controls.labelText : ''}
 						id={`answerOption-${index + 1}`}
 						shouldValidate={!!controls.validation}
 						onChange={(event) => onInputChangeHandler(event, controlName, controlsForValidate, index)}
@@ -309,21 +328,6 @@ const Constructor:React.FC = () => {
               />
               {renderInputs( 'question',formControls['question'], ['question', 'answerOptions'])}
               {renderInputs( 'answerOptions',formControls['answerOptions'], ['question', 'answerOptions'])}
-
-              <Select
-                value={correctAnswer}
-                onChange={onCorrectSelectChangeHandler}
-                name='correctAnswer'
-                inlineLabel
-                labelText='Выберите правильный ответ'
-                options={[
-                  {text: 'Не выбрано', value: 'asjdhkasd'},
-                  {text: '1', value: 1},
-                  {text: '2', value: 2},
-                  {text: '3', value: 3},
-                  {text: '4', value: 4},
-                ]}
-              />
 
               {
                 formErrorMessage 

@@ -1,4 +1,4 @@
-import { IFormControls, IInputControlProps, IInputValidationControls } from './types'
+import { ICorrectAnswers, IFormControls, IInputControlProps, IInputValidationControls } from './types'
 
 /**
  * 
@@ -117,4 +117,16 @@ export const generateId = (timestamp:number, additionalLength:number):string => 
   }
 
   return id
+}
+
+export const checkUserAnswerOnCorrectly = (userAnswers:ICorrectAnswers, correctAnswers:ICorrectAnswers):boolean => {
+  let isCorrect:boolean = true
+
+  if (Object.keys(userAnswers).length !== Object.keys(correctAnswers).length) isCorrect = false
+
+  Object.keys(userAnswers).forEach(key => {
+    if (userAnswers[key] !== correctAnswers[key]) isCorrect = false
+  })
+
+  return isCorrect
 }

@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactSVG, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import { Button, FinishedQuiz, Quiz, StartMenu } from "../components";
 import { getQuizFromId, increasePlayedCount } from "../firebase";
-import { IQuestion, IQuiz } from '../types'
+import { checkUserAnswerOnCorrectly } from "../functions";
+import { IQuestion, IQuiz, IAnswerState, ICorrectAnswers } from '../types'
 
 const initQuestions:IQuestion[] = [
   {
     text: 'empty',
     options: [{id: 1, text: 'empty'}, {id: 2, text: 'empty'}, {id: 3, text: 'empty'}, {id: 4, text: 'empty'}],
     type: 'single',
-    correct: 1,
+    correct: {1: true},
   },
   {
     text: 'empty',
     options: [{id: 1, text: 'empty'}, {id: 2, text: 'empty'}, {id: 3, text: 'empty'}, {id: 4, text: 'empty'}],
     type: 'single',
-    correct: 1,
+    correct: {1: true},
   },
 ]
 
@@ -63,31 +64,38 @@ const QuizPage:React.FC = () => {
     })
   }, [id, quiz.tryCount])
 
+
   const { finished, started, info, statistics, score, currentQuestion, answerState, createdAt, userAnswers } = quiz
 
-  const getAnswer = (answerId:number) => {
-    if (!quiz.answerState) {
-      const isCorrect = answerId === info?.questions[currentQuestion].correct
-      setQuiz(prev => ({
-        ...prev,
-        answerState: {
-          [answerId]: isCorrect ? 'correct' : 'error'
-        },
-        userAnswers: {
-          ...prev.userAnswers,
-          [currentQuestion]: isCorrect
-        },
-        score: isCorrect ? prev.score + 1 : prev.score
-      }))
-      const timeout = setTimeout(() => {
-        if (currentQuestion + 1 === statistics.numQuestions) {
-          finishQuiz()
-        } else {
-          nextQuestion()
-        }
-        clearTimeout(timeout)
-      }, 1.5e3)
-    }
+
+  const getAnswer = (userCorrectAnswer: ICorrectAnswers) => {
+    if (quiz.answerState) return
+
+    const answerState:IAnswerState = {}
+    const isCorrect:boolean = checkUserAnswerOnCorrectly(userCorrectAnswer, info!.questions[currentQuestion].correct)
+
+    Object.keys(userCorrectAnswer).forEach(key => {
+      const userAnswerIsCorrect = userCorrectAnswer[key] === info!.questions[currentQuestion].correct[key]
+      answerState[key] = userAnswerIsCorrect ? 'correct' : 'error'
+    })
+
+    setQuiz(prev => ({
+      ...prev,
+      answerState,
+      userAnswers: {
+        ...prev.userAnswers,
+        [currentQuestion]: isCorrect
+      },
+      score: isCorrect ? prev.score + 1 : prev.score
+    }))
+    const timeout = setTimeout(() => {
+      if (currentQuestion + 1 === statistics.numQuestions) {
+        finishQuiz()
+      } else {
+        nextQuestion()
+      }
+      clearTimeout(timeout)
+    }, 2e3)
   }
 
   const startQuiz = ():void => {

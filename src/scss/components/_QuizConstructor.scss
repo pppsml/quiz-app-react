@@ -14,18 +14,14 @@
 		display: flex;
 		.input__wrapper {
 			flex: 1 1 0;
+			margin-bottom: 0;
 			&:first-child:not(:last-child) {
 				flex: 0 0 30px;
 			}
+			&.invalid {
+				margin-bottom: 5px;
+			}
 		}
-	}
-}
-
-.input__wrapper {
-	flex: 1 1 0;
-	margin-bottom: 0;
-	&.invalid {
-		margin-bottom: 5px;
 	}
 }
 
@@ -38,4 +34,5 @@
 	font-size: 18px;
 	font-weight: 500;
 	color: #f01f30;
+	margin-bottom: 15px;
 }

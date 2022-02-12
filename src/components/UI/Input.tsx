@@ -6,6 +6,7 @@ interface InputProps {
   name?: string,
   labelText?: string,
   type?: React.HTMLInputTypeAttribute,
+  checked?: boolean,
   id?: string,
   inputTitle?: string,
   hoverTitle?: string,
@@ -30,10 +31,11 @@ const Input = memo(function Input (props:InputProps):any {
     name,
     labelText,
     type = 'text',
+    checked,
     id,
     inlineLabel = false,
     inputTitle,
-    hoverTitle,
+    hoverTitle = '',
     autoComplete = 'on',
     
     value = '',
@@ -55,21 +57,22 @@ const Input = memo(function Input (props:InputProps):any {
       {inputTitle && <p className='text tal'>{inputTitle}</p>}
       <div 
         className={`input__wrapper ${isInvalid ? 'invalid' : ''} ${inlineLabel ? 'inlineLabel' : ''} ${className ? className : ''}`} 
-        title={hoverTitle || ' '}
+        title={hoverTitle}
       >
         {labelText && <label className='input__label text' htmlFor={htmlFor}>{labelText}</label>}
         <input 
+          checked={checked}
           autoComplete={autoComplete}
           id={htmlFor}
           type={type}
           name={name}
-          className={`input ${type === 'radio' ? 'input__radio' : ''}`}
+          className='input'
           required={required}
           value={value}
           placeholder={placeholder ? placeholder : ''}
           onChange={onChange}
         />
-        { type === 'radio' && <label className='input__label text' htmlFor={htmlFor}></label> }
+        { type === 'radio' || type === 'checkbox' ? <label className='input__label text' htmlFor={htmlFor}></label> : null }
         {isInvalid && type !== 'radio' && <span className='input__error' >{errorMessage || 'Введите корректное значение'}</span>}
       </div>
     </>
