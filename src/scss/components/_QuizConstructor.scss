@@ -1,18 +1,32 @@
 .quizConstructor {
+	$maxWidth: 850px;
 	position: relative;
 
 	width: 100%;
-	max-width: 850px;
+	max-width: $maxWidth;
 	margin: 0 auto;
 
 	border-radius: 10px;
 	border: 2px solid #aaa;
 
 	padding: 10px;
+	&__radioInput {
+		flex: 0 0 30px;
+		height: 36px;
+	}
+
+	&__currQuestionSelect {
+		display: flex;
+		justify-content: center;
+		& select {
+			max-width: $maxWidth;
+		}
+	}
+
 	&__answerOption {
 		margin-bottom: 20px;
 		display: flex;
-		.input__wrapper {
+		.input__block {
 			flex: 1 1 0;
 			margin-bottom: 0;
 			&:first-child:not(:last-child) {
@@ -23,11 +37,6 @@
 			}
 		}
 	}
-}
-
-.quizConstructor__radioInput {
-	flex: 0 0 30px;
-	height: 36px;
 }
 
 .formErrorMessage {

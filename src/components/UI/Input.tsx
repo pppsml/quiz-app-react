@@ -56,23 +56,26 @@ const Input = memo(function Input (props:InputProps):any {
     <>
       {inputTitle && <p className='text tal'>{inputTitle}</p>}
       <div 
-        className={`input__wrapper ${isInvalid ? 'invalid' : ''} ${inlineLabel ? 'inlineLabel' : ''} ${className ? className : ''}`} 
+        className={`input__block ${isInvalid ? 'invalid' : ''} ${inlineLabel ? 'inlineLabel' : ''} ${className ? className : ''}`} 
         title={hoverTitle}
       >
         {labelText && <label className='input__label text' htmlFor={htmlFor}>{labelText}</label>}
-        <input 
-          checked={checked}
-          autoComplete={autoComplete}
-          id={htmlFor}
-          type={type}
-          name={name}
-          className='input'
-          required={required}
-          value={value}
-          placeholder={placeholder ? placeholder : ''}
-          onChange={onChange}
-        />
-        { type === 'radio' || type === 'checkbox' ? <label className='input__label text' htmlFor={htmlFor}></label> : null }
+        <div className="input__wrapper">
+          <input 
+            checked={checked}
+            autoComplete={autoComplete}
+            id={htmlFor}
+            type={type}
+            name={name}
+            className='input'
+            required={required}
+            value={value}
+            placeholder={placeholder ? placeholder : ''}
+            onChange={onChange}
+            />
+          { type === 'text' && <span className='input__length text text-minimal tar'>{value.length}</span>}
+          { type === 'radio' || type === 'checkbox' ? <label className='input__label text' htmlFor={htmlFor}></label> : null }
+        </div>
         {isInvalid && type !== 'radio' && <span className='input__error' >{errorMessage || 'Введите корректное значение'}</span>}
       </div>
     </>

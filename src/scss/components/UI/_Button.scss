@@ -19,14 +19,21 @@
 
 	cursor: pointer;
 	transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+
 	&:hover {
 		background-color: darken($primaryColor, 100%);
 		color: lighten($primaryColor, 100%);
 	}
+
 	&:disabled {
 		background-color: #666;
 		cursor: default;
 	}
+
+	&:focus {
+		outline: 2px solid blue;
+	}
+
 	&--outline {
 		border: 1px solid $primaryColor;
 		color: $primaryColor;

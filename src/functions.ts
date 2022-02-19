@@ -53,12 +53,13 @@ interface validateInputsReturns {
 }
 
 export const validateInput = (value:string, validation?:IInputValidationControls ):validateInputsReturns => {
-  if (!validation) return {
-    isValid: true,
-  }
-
   let isValid = true
   let errorMessage:any = ''
+  
+  if (!validation) return {
+    isValid,
+  }
+
   const formattedValue = value.trim().replace(/ +/g, ' ')
 
   if (validation.required) {
@@ -68,8 +69,14 @@ export const validateInput = (value:string, validation?:IInputValidationControls
 
   if (validation.minLength) {
     isValid = formattedValue.length >= validation.minLength && isValid
-    errorMessage = !isValid && errorMessage || `Минимальное количество символов: ${validation.minLength} (${formattedValue.length})`
+    errorMessage = !isValid && (errorMessage || `Минимальное количество символов: ${validation.minLength}`)
   }
+
+  if (validation.maxLength) {
+    isValid = formattedValue.length <= validation.maxLength && isValid
+    errorMessage = !isValid && (errorMessage || `Максимальное количество символов: ${validation.maxLength}`)
+  }
+  
 
   if (validation.regExp) {
     // todo
