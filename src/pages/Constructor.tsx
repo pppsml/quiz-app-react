@@ -76,7 +76,7 @@ const Constructor: React.FC = () => {
         name: 'quizName',
         labelText: `Придумайте название для теста`,
         // todo рандомизировать примеры названия теста
-        placeholder: '(Пример: Имеешь ли ты дальтонизм?)',
+        placeholder: '(Пример: На сколько хорошо ты знаешь Winx?)',
         autoComplete: 'off',
         valid: false,
         touched: false,
@@ -90,6 +90,9 @@ const Constructor: React.FC = () => {
 
   const formEl: any = useRef(null);
   const navigate = useNavigate()
+
+  
+  const [focusedInput, setFocusedInput]:[{isFocused: boolean, target: HTMLInputElement | null}, Function] = useState({isFocused: false, target: null})
 
   const [formIsValid, setFormIsValid] = useState(false)
   const [formErrorMessage, setFormErrorMessage] = useState('')
@@ -333,7 +336,7 @@ const Constructor: React.FC = () => {
     }))
   }
 
-  const onCorrectInputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const onCorrectInputChangeHandler = (event?: React.ChangeEvent<HTMLInputElement>): void => {
     const correctAnswersInputs = document.querySelectorAll('.input[name="correctAnswer"]:checked')
     const newCorrectAnswers: ICorrectAnswers = {}
 
@@ -357,6 +360,7 @@ const Constructor: React.FC = () => {
               checked={correctAnswers[index + 1] || false}
               type={questionType === 'multiple' ? 'checkbox' : 'radio'}
               className='quizConstructor__radioInput'
+              id={`radio-${index + 1}`}
               name='correctAnswer'
               onChange={onCorrectInputChangeHandler}
               value={`${index + 1}`}
@@ -389,7 +393,38 @@ const Constructor: React.FC = () => {
         />}
       <div className="quizConstructor">
 
-        <form onSubmit={event => { event.preventDefault() }} ref={formEl} id="constructorForm">
+        <form 
+          onSubmit={event => { event.preventDefault() }} 
+          ref={formEl} 
+          id="constructorForm"
+          onFocus={(e) => {
+            const target = e.target
+            if (target.tagName === 'INPUT' && target.name === 'answerOpt') {
+              setFocusedInput({
+                isFocused: true,
+                target,
+              })
+            }
+          }}
+          onBlur={(e) => {
+            const relatedTarget:any = e.relatedTarget
+            if (!(relatedTarget?.tagName === 'INPUT' && relatedTarget?.name === 'answerOpt')) {
+              setFocusedInput({
+                IsFocused: false,
+                target: null
+              })
+            }
+          }}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter' && focusedInput.isFocused) {
+              const inputNumber = focusedInput.target!.id.match(/\d/)![0]
+
+              const radioInput:any = document.querySelector(`input[name="correctAnswer"][value="${inputNumber}"]`)
+              radioInput!.checked = !correctAnswers[inputNumber]
+              onCorrectInputChangeHandler()
+            }
+          }}
+        >
           {!quizName
 
             /* если нет названия теста, выводится окно с инпутом для названия */

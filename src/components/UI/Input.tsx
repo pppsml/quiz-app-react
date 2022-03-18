@@ -49,6 +49,8 @@ const Input = memo(function Input (props:InputProps):any {
     onChange,
   } = props
 
+  const formattedValue = value.trim().replace(/ +/g, ' ')
+
   const isInvalid = !valid && shouldValidate && touched
   const htmlFor = id || `${type}-${Math.random()}`
 
@@ -73,8 +75,8 @@ const Input = memo(function Input (props:InputProps):any {
             placeholder={placeholder ? placeholder : ''}
             onChange={onChange}
             />
-          { type === 'text' && <span className='input__length text text-minimal tar'>{value.trim().length}</span>}
-          { type === 'radio' || type === 'checkbox' ? <label className='input__label text' htmlFor={htmlFor}></label> : null }
+          { type === 'text' && <span className='input__length text text-minimal tar'>{formattedValue.length}</span>}
+          { type === 'radio' || type === 'checkbox' ? <label tabIndex={1} className='input__label text' htmlFor={htmlFor}></label> : null }
         </div>
         {isInvalid && type !== 'radio' && <span className='input__error' >{errorMessage || 'Введите корректное значение'}</span>}
       </div>
