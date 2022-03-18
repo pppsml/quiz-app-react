@@ -73,7 +73,7 @@ const Input = memo(function Input (props:InputProps):any {
             placeholder={placeholder ? placeholder : ''}
             onChange={onChange}
             />
-          { type === 'text' && <span className='input__length text text-minimal tar'>{value.length}</span>}
+          { type === 'text' && <span className='input__length text text-minimal tar'>{value.trim().length}</span>}
           { type === 'radio' || type === 'checkbox' ? <label className='input__label text' htmlFor={htmlFor}></label> : null }
         </div>
         {isInvalid && type !== 'radio' && <span className='input__error' >{errorMessage || 'Введите корректное значение'}</span>}

@@ -82,7 +82,7 @@ const Constructor: React.FC = () => {
         touched: false,
         validation: {
           required: true,
-          minLength: 10,
+          minLength: 8,
         }
       })
     }
@@ -112,7 +112,7 @@ const Constructor: React.FC = () => {
       // set constructor state with saved question
       const { correct, type, text, options } = questions[currentQuestion]
       setFormErrorMessage('')
-      setFormIsValid(false)
+      setFormIsValid(true)
       setCorrectAnswers(correct)
       setQuestionType(type)
       setFormControls({
@@ -139,6 +139,7 @@ const Constructor: React.FC = () => {
       })
     }
   }, [currentQuestion, quizName])
+
 
   // quiz control functions
 
