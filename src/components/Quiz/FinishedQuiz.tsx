@@ -33,7 +33,7 @@ const FinishedQuiz:React.FC<FinishedQuizProps> = ({score, numQuestions, info, us
           }
         </ul>
         <div className='buttonContainer'>
-          <Button onClick={retryQuiz}>Пройти заного</Button>
+          <Button onClick={retryQuiz}>Пройти тест снова</Button>
           <Link to='/' className='link'>
             <Button outline>К списку тестов</Button>
           </Link>

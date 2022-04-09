@@ -34,7 +34,7 @@ const QuizList:React.FC = () => {
   }
 
   useEffect(() => {
-    if (!isMounted) {
+    if (!isMounted && !lastQuiz) {
       dispatch(fetchQuizzes(      
         sortItems[sortIndex - 1].path, 
         sortItems[sortIndex - 1].order))

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, KeyboardEvent, FormEventHandler, FormEvent } from 'react'
+import React, { useState, useRef, useEffect, KeyboardEvent } from 'react'
 
 import { Input, Button, Select } from '../components'
 import { IQuestion, IAnswerOption, IFormControls, IInputControlProps, IQuizData, ICorrectAnswers } from '../types';

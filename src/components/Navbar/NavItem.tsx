@@ -26,9 +26,3 @@ const NavItem: React.FC<NavItemProps> = ({path, title, icon}) => {
 }
 
 export default NavItem
-
-const quizes = {
-    0: {
-        question: 'Какого цвета небо?',
-    }
-}

@@ -1,4 +1,4 @@
-import React, { ReactSVG, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
@@ -62,7 +62,7 @@ const QuizPage:React.FC = () => {
       setQuiz((prev: any) => ({...prev, ...data}))
       setQuizIsLoaded(true)
     })
-  }, [id, quiz.tryCount])
+  }, [])
 
 
   const { finished, started, info, statistics, score, currentQuestion, answerState, createdAt, userAnswers } = quiz

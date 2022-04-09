@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, setDoc, doc, updateDoc, getDocs, getDoc, query, orderBy, limit, startAfter, increment, deleteDoc, FieldPath } from "firebase/firestore";
+import { getFirestore, collection, setDoc, doc, updateDoc, getDocs, getDoc, query, orderBy, limit, startAfter, deleteDoc, FieldPath } from "firebase/firestore";
 
 import { generateId } from './functions'
 import { IQuizData, IFetchingQuizData, IQuestion } from './types'
@@ -20,7 +20,7 @@ initializeApp(firebaseConfig);
 
 const db = getFirestore()
 
-const collectionName = 'testQuizData' // 'quizzes' | 'testQuizData'
+const collectionName = 'quizzes' // 'quizzes' | 'testQuizData'
 
 
 
