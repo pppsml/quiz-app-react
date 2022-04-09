@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, KeyboardEvent, FormEventHandler, FormEvent } from 'react'
 
 import { Input, Button, Select } from '../components'
 import { IQuestion, IAnswerOption, IFormControls, IInputControlProps, IQuizData, ICorrectAnswers } from '../types';
@@ -119,6 +119,7 @@ const Constructor: React.FC = () => {
       setCorrectAnswers(correct)
       setQuestionType(type)
       setFormControls({
+        ...InitialFormControls,
         question: {
           ...InitialFormControls.question,
           inputs: InitialFormControls['question'].inputs.map(inputControls => {
@@ -348,6 +349,38 @@ const Constructor: React.FC = () => {
   }
 
 
+  const formOnKeyPressHandler = (e:KeyboardEvent) => {
+    if (e.key === 'Enter' && focusedInput.isFocused) {
+      const inputNumber = focusedInput.target!.id.match(/\d/)![0]
+
+      const radioInput:any = document.querySelector(`input[name="correctAnswer"][value="${inputNumber}"]`)
+      radioInput!.checked = !correctAnswers[inputNumber]
+      onCorrectInputChangeHandler()
+    }
+  }
+
+  const formOnFocusHandler = (e:any) => {
+    const target = e.target
+    if (target.tagName === 'INPUT' && target.name === 'answerOpt') {
+      setFocusedInput({
+        isFocused: true,
+        target,
+      })
+    }
+  }
+
+  const formOnBlurHandler = (e:any) => {
+    const relatedTarget:any = e.relatedTarget
+    if (!(relatedTarget?.tagName === 'INPUT' && relatedTarget?.name === 'answerOpt')) {
+      setFocusedInput({
+        IsFocused: false,
+        target: null
+      })
+    }
+  }
+
+
+
 
   const renderInputs = (controlName: string, inputControls: renderInputControls, controlsForValidate: string[]): React.ReactElement[] => {
     return inputControls.inputs.map((controls, index) => (
@@ -397,33 +430,9 @@ const Constructor: React.FC = () => {
           onSubmit={event => { event.preventDefault() }} 
           ref={formEl} 
           id="constructorForm"
-          onFocus={(e) => {
-            const target = e.target
-            if (target.tagName === 'INPUT' && target.name === 'answerOpt') {
-              setFocusedInput({
-                isFocused: true,
-                target,
-              })
-            }
-          }}
-          onBlur={(e) => {
-            const relatedTarget:any = e.relatedTarget
-            if (!(relatedTarget?.tagName === 'INPUT' && relatedTarget?.name === 'answerOpt')) {
-              setFocusedInput({
-                IsFocused: false,
-                target: null
-              })
-            }
-          }}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter' && focusedInput.isFocused) {
-              const inputNumber = focusedInput.target!.id.match(/\d/)![0]
-
-              const radioInput:any = document.querySelector(`input[name="correctAnswer"][value="${inputNumber}"]`)
-              radioInput!.checked = !correctAnswers[inputNumber]
-              onCorrectInputChangeHandler()
-            }
-          }}
+          onFocus={formOnFocusHandler}
+          onBlur={formOnBlurHandler}
+          onKeyPress={formOnKeyPressHandler}
         >
           {!quizName
 

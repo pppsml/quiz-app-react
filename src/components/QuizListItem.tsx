@@ -11,7 +11,7 @@ interface ListItemProps {
   quizData: IQuizData,
 }
 
-const QuizListItem: React.FC<ListItemProps> = ({quizData}) => {
+const QuizListItem: React.FC<ListItemProps> = React.memo(({quizData}) => {
   const {createdAt, info, statistics, _id} = quizData
 
   // TODO createdAt to date
@@ -30,7 +30,7 @@ const QuizListItem: React.FC<ListItemProps> = ({quizData}) => {
       <div className='quizListItem__bottom'>
         <div></div> 
         <Link className='link' to={`/quiz/${_id}`} >
-          <Button title='Пройти тест'>
+          <Button tabIndex={-1} title='Пройти тест'>
             <IoPlay className='icon' />
             <span>Пройти тест</span>
           </Button>
@@ -38,6 +38,6 @@ const QuizListItem: React.FC<ListItemProps> = ({quizData}) => {
       </div>
     </li>
   )
-}
+})
 
 export default QuizListItem

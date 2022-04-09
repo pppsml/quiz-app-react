@@ -75,10 +75,11 @@ body {
 	justify-content: center;
 }
 
-@import './components/Navbar';
-@import './components/QuizList';
 @import './components/UI/Button';
 @import './components/UI/Input';
 @import './components/UI/Select';
+
+@import './components/Navbar';
+@import './components/QuizList';
 @import './components/Quiz';
 @import './components/QuizConstructor';

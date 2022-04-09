@@ -58,9 +58,22 @@ export interface IQuiz {
 }
 
 
+
+
 export interface ILastQuiz {
   item: object | null,
   hasMore: boolean,
+}
+
+export interface SortBy {
+  type: 'createdAt' | 'playedCount' | 'likesCount'
+  order: 'asc' | 'desc',
+  path: string,
+}
+
+export interface ISortType extends SortBy {
+  name: string,
+  text: string,
 }
 
 export interface IQuizzesState {
@@ -68,17 +81,20 @@ export interface IQuizzesState {
     items: IQuizData[],
   },
   lastQuiz: ILastQuiz,
-  quizIsLoaded: boolean,
+  quizzesIsLoading: boolean,
+  sortIndex: number,
 }
 
 export interface action {
   type: string,
-  payload: any,
+  payload?: any,
 }
+
+
 
 export interface IFetchingQuizData {
   data: [],
-  lastQuiz: ILastQuiz,
+  newLastQuiz: ILastQuiz,
 }
 
 export interface IInputValidationControls {
@@ -112,6 +128,10 @@ export interface IFormControls {
   }
 }
 
+// redux constants
+
+export const SET_SORT_INDEX = 'SET_SORT_INDEX'
+export const SET_QUIZZES_IS_LOADING = 'SET_QUIZZES_IS_LOADING'
 export const SET_QUIZZES = 'SET_QUIZZES'
 export const SET_LASTQUIZ = 'SET_LASTQUIZ'
-export const SET_RESETTED_QUIZZES = 'SET_RESETTED_QUIZZES'
+export const RESET_QUIZZES = 'RESET_QUIZZES'

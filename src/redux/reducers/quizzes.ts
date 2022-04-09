@@ -1,4 +1,4 @@
-import { action, SET_QUIZZES, SET_LASTQUIZ, SET_RESETTED_QUIZZES } from "../../types"
+import { action, SET_QUIZZES_IS_LOADING, SET_QUIZZES, SET_LASTQUIZ, RESET_QUIZZES, SET_SORT_INDEX } from "../../types"
 
 import { IQuizzesState } from "../../types"
 
@@ -10,11 +10,17 @@ const initialState:IQuizzesState = {
     item: null,
     hasMore: true,
   },
-  quizIsLoaded: false,
+  quizzesIsLoading: false,
+  sortIndex: 1,
 }
 
 const quizzes = (state:IQuizzesState = initialState, action: action) => {
   switch (action.type) {
+    case SET_QUIZZES_IS_LOADING:
+      return {
+        ...state,
+        quizzesIsLoading: action.payload,
+      }
     case SET_QUIZZES:
       return {
         ...state,
@@ -29,7 +35,7 @@ const quizzes = (state:IQuizzesState = initialState, action: action) => {
           ...state,
           lastQuiz: action.payload,
         }
-      case SET_RESETTED_QUIZZES:
+      case RESET_QUIZZES:
         return {
           ...state,
           quizzes: {
@@ -39,6 +45,12 @@ const quizzes = (state:IQuizzesState = initialState, action: action) => {
             item: null,
             hasMore: true,
           },
+        }
+
+      case SET_SORT_INDEX:
+        return {
+          ...state,
+          sortIndex: action.payload
         }
     default :
       return state

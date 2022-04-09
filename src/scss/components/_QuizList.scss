@@ -1,5 +1,45 @@
 .quizList {
 	list-style: none;
+	margin-bottom: 20px;
+}
+
+.quizListPage__title--container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: start;
+	margin-bottom: 16px;
+	& > * {
+		width: auto;
+		margin: 0;
+		&:not(:last-child) {
+			margin-right: 16px;
+		}
+	}
+}
+
+#ToTopButton {
+	position: fixed;
+	bottom: 16px;
+	right: 16px;
+
+	padding: 2.5px 0 0 0;
+
+	$size: 40px;
+	width: $size;
+	height: $size;
+
+	box-shadow: 0 0 12px #333;
+
+	display: none;
+	&.isVisible {
+		display: block;
+	}
+	& .icon {
+		$size: 25px;
+		width: $size;
+		height: $size;
+	}
 }
 
 .quizListItem {

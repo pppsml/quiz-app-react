@@ -112,18 +112,11 @@ const QuizPage:React.FC = () => {
     }))
 
     if (id && !quiz.tryCount) {
-      const quizData = {
+      increasePlayedCount(id, {
         _id: id,
         createdAt,
         info,
         statistics,
-      }
-      increasePlayedCount(id, {
-        ...quizData,
-        statistics: {
-          ...statistics,
-          played: statistics.played + 1
-        }
       })
     }
 
