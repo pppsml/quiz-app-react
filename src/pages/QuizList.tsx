@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { fetchQuizzes, resetQuizzes, setSortIndex } from '../redux/actions/quizzes'
+import { fetchQuizzes, resetQuizzes } from '../redux/actions/quizzes'
+import { setSortIndex } from '../redux/actions/filters'
 import { Button, QuizListItem, Select } from '../components'
 import { IoCloudDownloadOutline, IoReloadSharp } from 'react-icons/io5'
 
-import { IQuizzesState, ISortType } from '../types'
+import { IAppState, ISortType } from '../types'
 
 const sortItems:ISortType[] = [
   { name: 'createdDESC', type: 'createdAt', order: 'desc', path: 'createdAt', text: 'Сначала новые',},
@@ -20,10 +21,10 @@ const QuizList:React.FC = () => {
 
   const [ isMounted, setIsMounted ]:[boolean, Function]= useState(false)
 
-  const { items } = useSelector(({quizzes}:IQuizzesState) => quizzes)
-  const [ lastQuiz, hasMorePages ]:[any | null, boolean] = useSelector(({lastQuiz}:IQuizzesState) => [lastQuiz.item, lastQuiz.hasMore])
-  const quizzesIsLoading:boolean = useSelector(({quizzesIsLoading}:IQuizzesState) => quizzesIsLoading)
-  const sortIndex:number = useSelector(({sortIndex}:IQuizzesState) => sortIndex)
+  const items = useSelector(({quizzes}:IAppState) => quizzes.quizzes.items)
+  const [ lastQuiz, hasMorePages ]:[any | null, boolean] = useSelector(({quizzes}:IAppState) => [quizzes.lastQuiz.item, quizzes.lastQuiz.hasMore])
+  const quizzesIsLoading:boolean = useSelector(({quizzes}:IAppState) => quizzes.quizzesIsLoading)
+  const sortIndex:number = useSelector(({filters}:IAppState) => filters.sortIndex)
 
   const getMoreQuizzes = () => {
     if (hasMorePages) dispatch(fetchQuizzes(
@@ -59,7 +60,7 @@ const QuizList:React.FC = () => {
   }
 
   return (
-    <div className='main__content'>
+    <>
       <div className='quizListPage__title--container'>
         <h1 className='text title'>Список тестов</h1>
         <Select
@@ -91,7 +92,7 @@ const QuizList:React.FC = () => {
           </Button>
         </div>
       }
-    </div>
+    </>
   )
 }
 

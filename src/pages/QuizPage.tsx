@@ -159,19 +159,19 @@ const QuizPage:React.FC = () => {
 
   if (quizLoadingError) {
     return (
-      <div className="main__content">
-      <div className="quiz__container">
-        <h1 className="text title tal">Теста с таким идентификатором не существует ({id})</h1>
-        <Link className="link" to='/'>
-          <Button>К списку тестов</Button>
-        </Link>
-      </div>
-    </div>
+      <>
+        <div className="quiz__container">
+          <h1 className="text title tal">Теста с таким идентификатором не существует ({id})</h1>
+          <Link className="link" to='/'>
+            <Button>К списку тестов</Button>
+          </Link>
+        </div>
+      </>
     )
   }
 
   return (
-    <div className="main__content">
+    <>
       <div className="quiz__container">
 
         {quizIsLoaded && <h2 className="text title">{info.name}</h2>}
@@ -202,7 +202,7 @@ const QuizPage:React.FC = () => {
         }
 
       </div>
-    </div>
+    </>
   )
 }
 

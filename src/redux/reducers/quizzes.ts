@@ -11,10 +11,9 @@ const initialState:IQuizzesState = {
     hasMore: true,
   },
   quizzesIsLoading: false,
-  sortIndex: 1,
 }
 
-const quizzes = (state:IQuizzesState = initialState, action: action) => {
+const quizzesReducer = (state:IQuizzesState = initialState, action: action):IQuizzesState => {
   switch (action.type) {
     case SET_QUIZZES_IS_LOADING:
       return {
@@ -46,15 +45,9 @@ const quizzes = (state:IQuizzesState = initialState, action: action) => {
             hasMore: true,
           },
         }
-
-      case SET_SORT_INDEX:
-        return {
-          ...state,
-          sortIndex: action.payload
-        }
     default :
       return state
   }
 }
 
-export default quizzes
+export default quizzesReducer

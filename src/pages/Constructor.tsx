@@ -349,6 +349,7 @@ const Constructor: React.FC = () => {
   }
 
 
+  // mark correct answer by pressing "Enter" while input was focused
   const formOnKeyPressHandler = (e:KeyboardEvent) => {
     if (e.key === 'Enter' && focusedInput.isFocused) {
       const inputNumber = focusedInput.target!.id.match(/\d/)![0]
@@ -412,7 +413,7 @@ const Constructor: React.FC = () => {
   }
 
   return (
-    <div className='main__content'>
+    <>
       <h1 className='text title' >Создание теста</h1>
       {questions.length > 0
         && <Select
@@ -489,7 +490,7 @@ const Constructor: React.FC = () => {
         </form>
 
       </div>
-    </div>
+    </>
   )
 }
 

@@ -1,4 +1,8 @@
+import { User } from "firebase/auth";
 import React from "react";
+import { Interface } from "readline";
+
+// quiz obj types
 
 export interface IQuizStatistics {
   numQuestions: number,
@@ -57,6 +61,8 @@ export interface IQuiz {
   tryCount: number
 }
 
+// quiz obj types ---end
+
 
 
 
@@ -74,20 +80,6 @@ export interface SortBy {
 export interface ISortType extends SortBy {
   name: string,
   text: string,
-}
-
-export interface IQuizzesState {
-  quizzes: {
-    items: IQuizData[],
-  },
-  lastQuiz: ILastQuiz,
-  quizzesIsLoading: boolean,
-  sortIndex: number,
-}
-
-export interface action {
-  type: string,
-  payload?: any,
 }
 
 
@@ -135,3 +127,31 @@ export const SET_QUIZZES_IS_LOADING = 'SET_QUIZZES_IS_LOADING'
 export const SET_QUIZZES = 'SET_QUIZZES'
 export const SET_LASTQUIZ = 'SET_LASTQUIZ'
 export const RESET_QUIZZES = 'RESET_QUIZZES'
+export const SET_USER = 'SET_USER'
+
+export interface IQuizzesState {
+  quizzes: {
+    items: IQuizData[],
+  },
+  lastQuiz: ILastQuiz,
+  quizzesIsLoading: boolean,
+}
+
+export interface IFiltersState {
+  sortIndex: number,
+}
+
+export interface IUserState {
+  user: User | null,
+}
+
+export interface IAppState {
+  quizzes: IQuizzesState,
+  filters: IFiltersState,
+  user: IUserState;
+}
+
+export interface action {
+  type: string,
+  payload?: any,
+}

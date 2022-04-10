@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, setDoc, doc, updateDoc, getDocs, getDoc, query, orderBy, limit, startAfter, deleteDoc, FieldPath } from "firebase/firestore";
 
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
+
 import { generateId } from './functions'
 import { IQuizData, IFetchingQuizData, IQuestion } from './types'
 
@@ -16,14 +18,15 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-const db = getFirestore()
+const db = getFirestore(app)
 
-const collectionName = 'quizzes' // 'quizzes' | 'testQuizData'
+const collectionName = 'testQuizData' // 'quizzes' | 'testQuizData'
 
 
 
+// quizzes
 
 export const writeQuiz = (quiz: IQuizData):void => {
   setDoc(doc(db, collectionName, quiz._id), quiz);
@@ -67,7 +70,6 @@ export const getQuizFromId = async (id: string) => {
 }
 
 
-
 export const increasePlayedCount = (id: string, quizData: any):void => {
   const quizRef = doc(db, collectionName, id)
   updateDoc(quizRef, {
@@ -78,6 +80,7 @@ export const increasePlayedCount = (id: string, quizData: any):void => {
     }
   });
 }
+
 
 export const createTestData = (count:number) => {
   const questions:IQuestion[] = [
@@ -128,8 +131,8 @@ export const createTestData = (count:number) => {
       },
       statistics: {
         numQuestions: questions.length,
-        played: Math.floor(Math.random() * ( 3000 - 10 ) + 10),
-        likes: Math.floor(Math.random() * ( 200 - 10 ) + 10),
+        played: Math.floor(Math.random() * ( 10000 - 10 ) + 10),
+        likes: Math.floor(Math.random() * ( 500 - 10 ) + 10),
       },
       _id: generateId(timestamp + i, 10)
     }
@@ -143,4 +146,25 @@ export const deleteDocs = (docs:string[]):void => {
   docs.forEach(docId => {
     deleteDoc(doc(db, collectionName, docId))
   })
+}
+
+
+
+
+// auth
+
+export const auth = getAuth(app)
+
+export const signUpWithEP = (email: string, password: string) => {
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+
+      console.log(user)
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage)
+    });
 }
