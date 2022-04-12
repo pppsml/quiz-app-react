@@ -1,7 +1,8 @@
 import { action, IUserState, SET_USER } from "../../types";
 
 const initState:IUserState = {
-  user: null
+  userData: null,
+  isAuthenticated: false,
 }
 
 const userReducer = (state:IUserState = initState, action: action):IUserState => {
@@ -9,7 +10,8 @@ const userReducer = (state:IUserState = initState, action: action):IUserState =>
     case SET_USER:
       return {
         ...state,
-        user: action.payload,
+        userData: action.payload,
+        isAuthenticated: !!action.payload,
       };
     
     default: return state

@@ -3,8 +3,8 @@ import { getFirestore, collection, setDoc, doc, updateDoc, getDocs, getDoc, quer
 
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
 
-import { generateId } from './functions'
-import { IQuizData, IFetchingQuizData, IQuestion } from './types'
+import { generateId } from '../functions'
+import { IQuizData, IFetchingQuizData, IQuestion } from '../types'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -18,15 +18,12 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app)
 
 const collectionName = 'testQuizData' // 'quizzes' | 'testQuizData'
 
-
-
-// quizzes
 
 export const writeQuiz = (quiz: IQuizData):void => {
   setDoc(doc(db, collectionName, quiz._id), quiz);
@@ -146,25 +143,4 @@ export const deleteDocs = (docs:string[]):void => {
   docs.forEach(docId => {
     deleteDoc(doc(db, collectionName, docId))
   })
-}
-
-
-
-
-// auth
-
-export const auth = getAuth(app)
-
-export const signUpWithEP = (email: string, password: string) => {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-
-      console.log(user)
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode, errorMessage)
-    });
 }

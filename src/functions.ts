@@ -137,3 +137,11 @@ export const checkUserAnswerOnCorrectly = (userAnswers:ICorrectAnswers, correctA
 
   return isCorrect
 }
+
+export const lockContentScrolling = () => {
+  (document.querySelector('.main__content') as any).style.overflow = 'hidden'
+}
+
+export const unlockContentScrolling = () => {
+  (document.querySelector('.main__content') as any).style.overflow = 'auto'
+}

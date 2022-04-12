@@ -1,5 +1,5 @@
 import { IQuizData, IFetchingQuizData, SET_QUIZZES_IS_LOADING, SET_QUIZZES, SET_LASTQUIZ, RESET_QUIZZES, action } from "../../types"
-import { getQuizzes } from '../../firebase'
+import { getQuizzes } from '../../firebase/firebase-quizzes'
 
 const setQuizzesIsLoading = (loadingState: boolean):action => ({
   type: SET_QUIZZES_IS_LOADING,

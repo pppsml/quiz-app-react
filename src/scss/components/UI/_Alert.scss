@@ -1,0 +1,13 @@
+@import '../../vars';
+
+.modal__alert {
+  &--text {
+    text-align: center;
+  }
+  &--okBtn {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    margin: 0;
+  }
+}

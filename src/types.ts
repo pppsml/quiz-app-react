@@ -1,6 +1,5 @@
 import { User } from "firebase/auth";
 import React from "react";
-import { Interface } from "readline";
 
 // quiz obj types
 
@@ -142,7 +141,8 @@ export interface IFiltersState {
 }
 
 export interface IUserState {
-  user: User | null,
+  userData: User | null,
+  isAuthenticated: boolean,
 }
 
 export interface IAppState {

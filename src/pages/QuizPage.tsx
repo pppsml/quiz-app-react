@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import { Button, FinishedQuiz, Quiz, StartMenu } from "../components";
-import { getQuizFromId, increasePlayedCount } from "../firebase";
+import { getQuizFromId, increasePlayedCount } from "../firebase/firebase-quizzes";
 import { checkUserAnswerOnCorrectly } from "../functions";
 import { IQuestion, IQuiz, IAnswerState, ICorrectAnswers } from '../types'
 

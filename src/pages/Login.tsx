@@ -1,74 +1,62 @@
-import React, { useEffect } from 'react'
-import { Button, Input } from '../components'
+import React from 'react'
+import { Button, Input, Alert } from '../components'
 
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendEmailVerification } from 'firebase/auth'
-import { auth } from '../firebase'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { IAppState } from '../types'
-import { setUser } from '../redux/actions/user'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { signInWithEP, signOutFromApp, signUpWithEP } from '../firebase/firebase-auth'
 
 type Props = {}
 
 const Login:React.FC<Props> = () => {
-  const dispatch = useDispatch()
 
-  const user = useSelector(({user}:IAppState) => user.user)
+  const [ openAlert, closeModal, AlertModal ]:any = Alert({
+    text: 'Вам на почту отправлено письмо с подтверждением',
+    fontSize: '22px',
+  })
 
+  const navigate = useNavigate()
+  const location:any = useLocation()
+  const from = location.state?.from.pathname || '/'
+
+  
+  const userData = useSelector(({user}:IAppState) => user.userData)
+  
+  
+  
   const [ registerDisplayName, setRegisterDisplayName ] = React.useState('')
   const [ registerEmail, setRegisterEmail ] = React.useState('')
   const [ registerPassword, setRegisterPassword ] = React.useState('')
   const [ loginEmail, setLoginEmail ] = React.useState('')
   const [ loginPassword, setloginPassword ] = React.useState('')
-  const [ displayName, setDisplayName ] = React.useState('')
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      dispatch(setUser(currentUser))
-    })
-  }, [auth.currentUser])
-  
-
-  const sendEmail = () => {
-    if (auth.currentUser) sendEmailVerification(auth.currentUser)
-  }
-
-  (window as any).sendEmail = sendEmail;
 
   const register = () => {
-    createUserWithEmailAndPassword(auth, registerEmail, registerPassword)
-      .then(userCredential => {
-        if (auth.currentUser) updateProfile(auth.currentUser, {
-          displayName: registerDisplayName,
-        })
+    signUpWithEP(registerEmail, registerPassword, registerDisplayName)
+      .then(() => {
+        openAlert()
       })
   }
 
-  const login = async () => {
-    try {
-      const user = await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
-    } catch (error:any) {
-      console.log(error.message)
-    }
-  }
-
-  const singOut = async () => {
-    await signOut(auth)
-  }
-
-  const update = async () => {
-    if (!auth.currentUser) return;
-    await updateProfile(auth.currentUser, {
-      displayName,
+  const login = () => {
+    signInWithEP(loginEmail, loginPassword)
+    .then(() => {
+      navigate(from, {replace: true,})
     })
   }
 
+  const singOut = () => {
+    signOutFromApp()
+  }
+  
+  if (userData !== null) return <Navigate to='/profile' />
 
   return (
-    <div className='main__content'>
+    <>
       <div>
-        <Input onChange={((event:any) => {setRegisterDisplayName(event.target.value)})} value={registerDisplayName} labelText='Login' inputTitle='Register' />
-        <Input onChange={((event:any) => {setRegisterEmail(event.target.value)})} value={registerEmail} labelText='Email' />
-        <Input onChange={((event:any) => {setRegisterPassword(event.target.value)})} value={registerPassword} labelText='Password' />
+        <Input onChange={((event:any) => {setRegisterDisplayName(event.target.value)})} value={registerDisplayName} name='username' labelText='Login' inputTitle='Register' />
+        <Input onChange={((event:any) => {setRegisterEmail(event.target.value)})} value={registerEmail} name='email' labelText='Email' />
+        <Input onChange={((event:any) => {setRegisterPassword(event.target.value)})} value={registerPassword} type='password' labelText='Password' />
         <Button onClick={register}>Register</Button>
       </div>
 
@@ -77,8 +65,8 @@ const Login:React.FC<Props> = () => {
       <br />
 
       <div>
-        <Input onChange={((event:any) => {setLoginEmail(event.target.value)})} value={loginEmail} labelText='Email' inputTitle='Login' />
-        <Input onChange={((event:any) => {setloginPassword(event.target.value)})} value={loginPassword} labelText='Password' />
+        <Input onChange={((event:any) => {setLoginEmail(event.target.value)})} value={loginEmail} name='email' labelText='Email' inputTitle='Login' />
+        <Input onChange={((event:any) => {setloginPassword(event.target.value)})} value={loginPassword} type='password' labelText='Password' />
         <Button onClick={login}>Login</Button>
       </div>
 
@@ -86,18 +74,9 @@ const Login:React.FC<Props> = () => {
       <br />
       <br />
 
-      <div>
-        <Input onChange={((event:any) => {setDisplayName(event.target.value)})} value={displayName} labelText='New display name' />
-        <Button onClick={update}>Update profile</Button>
-      </div>
-
-      <br />
-      <br />
-      <br />
-
-      <p>You are signed in: {user?.displayName || user?.email || 'not logged in'}</p>
       <Button onClick={singOut}>sign out</Button>
-    </div>
+      <AlertModal />
+    </>
   )
 }
 

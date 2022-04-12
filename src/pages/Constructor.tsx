@@ -4,7 +4,7 @@ import { Input, Button, Select } from '../components'
 import { IQuestion, IAnswerOption, IFormControls, IInputControlProps, IQuizData, ICorrectAnswers } from '../types';
 import { validateInput, checkAllInputsOnValid, createFormControls, generateId } from '../functions';
 
-import { writeQuiz } from '../firebase'
+import { writeQuiz } from '../firebase/firebase-quizzes'
 import { useNavigate } from 'react-router-dom';
 
 interface renderInputControls {

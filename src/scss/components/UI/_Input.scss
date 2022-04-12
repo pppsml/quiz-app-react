@@ -131,6 +131,10 @@
 				}
 			}
 
+			&[type="password"] {
+				font-weight: 700;
+			}
+
 			&__length {
 				position: absolute;
 				right: 5px;
