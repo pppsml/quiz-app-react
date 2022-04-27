@@ -1,4 +1,4 @@
-import { ICorrectAnswers, IFormControls, IInputControlProps, IInputValidationControls } from './types'
+import { ICorrectAnswers } from './types'
 
 /**
  * 
@@ -18,6 +18,11 @@ export const getText = (num: number, wordArray: string[]):string => {
 
   return 'Ошибка'
 }
+
+
+export const getStringLength = (str:string):number =>
+  str.trim().replace(/\s+/g, ' ').length
+
 
 /**
  * 
@@ -47,74 +52,6 @@ export const getDateFromTimestamp = (timestamp: number, locale: 'ru' | 'en' = 'e
   }
 }
 
-interface validateInputsReturns {
-  isValid: boolean,
-  errorMessage?: string
-}
-
-export const validateInput = (value:string, validation?:IInputValidationControls ):validateInputsReturns => {
-  let isValid = true
-  let errorMessage:any = ''
-  
-  if (!validation) return {
-    isValid,
-  }
-
-  const formattedValue = value.trim().replace(/ +/g, ' ')
-
-  if (validation.required) {
-    isValid = !!formattedValue && isValid
-    errorMessage = !isValid && 'Поле не может быть пустым'
-  }
-
-  if (validation.minLength) {
-    isValid = formattedValue.length >= validation.minLength && isValid
-    errorMessage = !isValid && (errorMessage || `Минимальное количество символов: ${validation.minLength}`)
-  }
-
-  if (validation.maxLength) {
-    isValid = formattedValue.length <= validation.maxLength && isValid
-    errorMessage = !isValid && (errorMessage || `Максимальное количество символов: ${validation.maxLength}`)
-  }
-  
-
-  if (validation.regExp) {
-    // todo
-    console.log(validation.regExp)
-  }
-
-  return {
-    isValid,
-    errorMessage,
-  }
-}
-
-export const checkAllInputsOnValid = (formControls: IFormControls, controlsForValidate: string[]):boolean => {
-  let formIsValid = true
-
-  controlsForValidate.forEach((controlName:string) => {
-    formControls[controlName].inputs.forEach((inputControls:IInputControlProps) => {
-      if (!inputControls.valid) {
-        formIsValid = false
-      }
-    })
-  })
-
-  return formIsValid
-}
-
-export const createFormControls = (controls:IInputControlProps, count:number = 1):IInputControlProps[] => {
-  const formControls:IInputControlProps[] = []
-
-  for (let i = 0; i < count; i++) {
-    formControls.push({
-      ...controls
-    })
-  }
-
-  return formControls
-}
-
 export const generateId = (timestamp:number, additionalLength:number):string => {
   let id = timestamp.toString()
   const startCharcodes:number[] = [65, 97]
@@ -139,9 +76,9 @@ export const checkUserAnswerOnCorrectly = (userAnswers:ICorrectAnswers, correctA
 }
 
 export const lockContentScrolling = () => {
-  (document.querySelector('.main__content') as any).style.overflow = 'hidden'
+  document.body.style.overflow = 'hidden'
 }
 
 export const unlockContentScrolling = () => {
-  (document.querySelector('.main__content') as any).style.overflow = 'auto'
+  document.body.style.overflow = 'auto'
 }

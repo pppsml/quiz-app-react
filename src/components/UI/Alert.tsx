@@ -4,11 +4,11 @@ import Button from './Button'
 import useModal from './Modal'
 
 type Props = {
-  text: string,
+  textArr: string[],
   fontSize?: string,
 }
 
-const Alert = ({text, fontSize}: Props) => {
+const Alert = ({textArr, fontSize}: Props) => {
   const {isShown, openModal, closeModal, Modal} = useModal()
   return [
     openModal,
@@ -16,9 +16,11 @@ const Alert = ({text, fontSize}: Props) => {
     () => <Modal 
       html={
         <div>
-          <p style={{fontSize}} className='modal__alert--text'>
-            {text}
-          </p>
+          {textArr.map((text, index) => (
+            <p key={`${text}_${index}`} style={{fontSize}} className='modal__text'>
+              {text}
+            </p>
+          ))}
           <Button className='modal__alert--okBtn' onClick={closeModal}>OK</Button>
         </div>
       }

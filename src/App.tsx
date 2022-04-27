@@ -44,7 +44,7 @@ const App: React.FC = () => {
     <div className='page__wrapper'>
       <Navbar paths={paths} />
 
-      <div className='main__content'>
+      <main className='main__content'>
         <Routes>
           <Route path='/' element={<QuizList />} />
 
@@ -59,10 +59,14 @@ const App: React.FC = () => {
           </Route>
 
           <Route path='/login' element={<Login />} />
-          <Route path='/profile' element={<Profile />} />
+          <Route path='/profile' element={
+            <RequireAuth>
+              <Profile />
+            </RequireAuth>
+          } />
           <Route path='/*' element={<Error404 />} />
         </Routes>
-      </div>
+      </main>
       
     </div>
   );

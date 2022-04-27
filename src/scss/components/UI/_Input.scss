@@ -131,7 +131,7 @@
 				}
 			}
 
-			&[type="password"] {
+			&[type="password"]:not(:placeholder-shown) {
 				font-weight: 700;
 			}
 
@@ -172,7 +172,7 @@
 		bottom: 0;
 		transform: translateY(100%);
 
-		margin-left: 10px;
+		// margin-left: 10px;
 		color: #f01f30;
 		font-size: 16px;
 		font-weight: 500;

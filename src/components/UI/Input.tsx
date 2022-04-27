@@ -4,7 +4,7 @@ interface InputProps {
   className?: string,
   placeholder?: string,
   name?: string,
-  labelText?: string,
+  label?: string,
   type?: React.HTMLInputTypeAttribute,
   checked?: boolean,
   id?: string,
@@ -15,11 +15,12 @@ interface InputProps {
 
   value?: string
   
+  validation?: {},
   shouldValidate?: boolean,
-  valid?: boolean
+  isValid?: boolean
   required?: boolean,
   touched?: boolean
-  errorMessage?: string,
+  error?: string,
 
   onChange?: (event:React.ChangeEvent<HTMLInputElement>) => void
 };
@@ -29,7 +30,7 @@ const Input = memo(function Input (props:InputProps):any {
     className,
     placeholder,
     name,
-    labelText,
+    label,
     type = 'text',
     checked,
     id,
@@ -39,19 +40,20 @@ const Input = memo(function Input (props:InputProps):any {
     autoComplete = 'on',
     
     value = '',
+    validation,
     
-    shouldValidate = false,
-    valid = true,
-    required=false,
+    shouldValidate = !!validation,
+    isValid = true,
+    required = false,
     touched,
-    errorMessage,
+    error,
 
     onChange,
   } = props
 
   const formattedValue = value.trim().replace(/ +/g, ' ')
 
-  const isInvalid = !valid && shouldValidate && touched
+  const isInvalid = !isValid && shouldValidate && touched
   const htmlFor = id || `${type}-${Math.random()}`
 
   return (
@@ -61,7 +63,13 @@ const Input = memo(function Input (props:InputProps):any {
         className={`input__block ${isInvalid ? 'invalid' : ''} ${inlineLabel ? 'inlineLabel' : ''} ${className ? className : ''}`} 
         title={hoverTitle}
       >
-        {labelText && <label className='input__label text' htmlFor={htmlFor}>{labelText}</label>}
+        {
+          label 
+          && <label className='input__label text' htmlFor={htmlFor}>
+            {label}
+            {required && <span style={{color: 'red',}}>*</span>}
+          </label>
+        }
         <div className="input__wrapper">
           <input 
             checked={checked}
@@ -75,10 +83,13 @@ const Input = memo(function Input (props:InputProps):any {
             placeholder={placeholder ? placeholder : ''}
             onChange={onChange}
             />
-          { type === 'text' && <span className='input__length text text-minimal tar'>{formattedValue.length}</span>}
+          { 
+            (type === 'text' || type === 'email')
+            && <span className='input__length text text-minimal tar'>{formattedValue.length}</span>
+          }
           { type === 'radio' || type === 'checkbox' ? <label tabIndex={1} className='input__label text' htmlFor={htmlFor}></label> : null }
         </div>
-        {isInvalid && type !== 'radio' && <span className='input__error' >{errorMessage || 'Введите корректное значение'}</span>}
+        {isInvalid && type !== 'radio' && <span className='input__error' >{error || 'Введите корректное значение'}</span>}
       </div>
     </>
   )

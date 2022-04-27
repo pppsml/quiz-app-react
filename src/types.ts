@@ -88,37 +88,6 @@ export interface IFetchingQuizData {
   newLastQuiz: ILastQuiz,
 }
 
-export interface IInputValidationControls {
-  required?: boolean,
-  minLength?: number,
-  maxLength?:number,
-  regExp?: RegExp,
-}
-
-export interface IInputControlProps {
-  value?: string,
-  type?: React.HTMLInputTypeAttribute,
-  checked?: boolean,
-  labelText?: string,
-  hoverTitle?: string,
-  name?: string,
-  inlineLabel?: boolean
-  placeholder?: string,
-  errorMessage?: string,
-  valid?: boolean,
-  touched?: boolean,
-  autoComplete?: 'on' | 'off'
-  validation?: IInputValidationControls,
-  map?: any
-}
-
-export interface IFormControls {
-  [key: string]: {
-    inputs: IInputControlProps[],
-    title?: string,
-  }
-}
-
 // redux constants
 
 export const SET_SORT_INDEX = 'SET_SORT_INDEX'

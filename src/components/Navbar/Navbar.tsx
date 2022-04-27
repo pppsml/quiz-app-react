@@ -10,7 +10,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = React.memo(({paths}) => {
     return (
-        <aside className="sidebar">
+        <menu className="sidebar">
             <nav className="navigation">
                 <ul className="nav__list">
                     {paths.map((pathObj, i) => (
@@ -18,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = React.memo(({paths}) => {
                     ))}
                 </ul>
             </nav>
-        </aside>
+        </menu>
     )
 })
 

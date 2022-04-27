@@ -4,19 +4,23 @@ import { app } from "./firebase-quizzes";
 
 export const auth = getAuth(app)
 
-// регистация email+password
+const actionCodeSettings = {
+  //redirect url after email verification or password change
+  url: 'https://pppsml.github.io/quiz-app-react/'
+}
 
+// регистация email+password
 // TODO: при регистрации проверять занято ли имя пользователя =>
 // TODO: отправлять запрос в firestore с запросом username === displayname
-export const signUpWithEP = async (email:string, password:string, displayName:string) => {
+export const signUpWithEP = async (email:string, password:string, displayName?:string) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password)
 
-    if (auth.currentUser) updateProfile(auth.currentUser, {
-      displayName: displayName,
+    if (auth.currentUser && displayName) updateProfile(auth.currentUser, {
+      displayName,
     })
 
-    sendEmailVerification(userCredential.user)
+    sendEmailVerification(userCredential.user, actionCodeSettings)
     return userCredential.user
   } catch(error:any) {
     // TODO: сделать свои alert, confirm, prompt окна для взаимодействия с пользователем

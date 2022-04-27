@@ -1,16 +1,14 @@
 import React, { useState, useRef, useEffect, KeyboardEvent } from 'react'
 
-import { Input, Button, Select } from '../components'
-import { IQuestion, IAnswerOption, IFormControls, IInputControlProps, IQuizData, ICorrectAnswers } from '../types';
-import { validateInput, checkAllInputsOnValid, createFormControls, generateId } from '../functions';
+import { Input, Button, Select, Title } from '../components'
+import { IQuestion, IAnswerOption, IQuizData, ICorrectAnswers } from '../types';
+import { generateId } from '../functions';
+
+import { useForm } from '../hooks';
+import type { ICustomField, ICustomFieldsObject } from '../hooks'
 
 import { writeQuiz } from '../firebase/firebase-quizzes'
 import { useNavigate } from 'react-router-dom';
-
-interface renderInputControls {
-  inputs: IInputControlProps[],
-  title?: string,
-}
 
 interface IConstructorState {
   questions: IQuestion[],
@@ -24,77 +22,59 @@ const InitialState: IConstructorState = {
   currentQuestion: 0,
 }
 
-
-const createAnswersFormControls = (count: number = 1, values: string[] = []): IInputControlProps[] => {
-  const controlsArr: IInputControlProps[] = []
-
-  for (let i = 0; i < count; i++) {
-    controlsArr.push(...createFormControls({
-      value: values[i] || '',
-      name: 'answerOpt',
-      autoComplete: 'off',
-      // labelText: `${i + 1}.`,
-      // inlineLabel: true,
-      valid: false,
-      touched: false,
-      checked: false,
-      validation: {
-        required: true,
-      },
-    }))
-  }
-
-  return controlsArr
+const createAnswerOptionField = (num:number) => {
+  return
 }
-
 
 const Constructor: React.FC = () => {
   const [quiz, setQuiz] = useState(InitialState)
 
   const { questions, quizName, currentQuestion } = quiz
 
-  const InitialFormControls: IFormControls = {
+  const InitialFormControls: ICustomFieldsObject = {
     question: {
-      inputs: createFormControls({
-        name: 'question',
-        labelText: `Вопрос №${currentQuestion + 1}`,
-        placeholder: 'Введите текст вопроса',
-        autoComplete: 'off',
-        valid: false,
-        touched: false,
-        validation: {
-          required: true,
-        }
-      }, 1)
+      value: '',
+      label: `Вопрос №${currentQuestion + 1}`,
+      placeholder: 'Введите текст вопроса',
+      autoComplete: 'off',
+      isValid: false,
+      touched: false,
+      validation: {
+        required: true,
+      }
     },
-    answerOptions: {
-      inputs: createAnswersFormControls(4),
-      title: 'Варианты ответов:',
+    option1: {
+      value: '',
+      autoComplete: 'off',
+      // labelText: `${i + 1}.`,
+      // inlineLabel: true,
+      isValid: false,
+      touched: false,
+      validation: {
+        required: true,
+      },
     },
     quizName: {
-      inputs: createFormControls({
-        name: 'quizName',
-        labelText: `Придумайте название для теста`,
-        // todo рандомизировать примеры названия теста
-        placeholder: '(Пример: На сколько хорошо ты знаешь Winx?)',
-        autoComplete: 'off',
-        valid: false,
-        touched: false,
-        validation: {
-          required: true,
-          minLength: 8,
-        }
-      })
+      value: '',
+      label: `Придумайте название для теста`,
+      // todo рандомизировать примеры названия теста
+      placeholder: '(Пример: На сколько хорошо ты знаешь Winx?)',
+      autoComplete: 'off',
+      isValid: false,
+      touched: false,
+      validation: {
+        required: true,
+      }
     }
   };
+
+  const {fields, formIsValid} =  useForm(InitialFormControls)
+  const { quizName: quizNameField, question } = fields
+
 
   const formEl: any = useRef(null);
   const navigate = useNavigate()
 
-  
-  const [focusedInput, setFocusedInput]:[{isFocused: boolean, target: HTMLInputElement | null}, Function] = useState({isFocused: false, target: null})
-
-  const [formIsValid, setFormIsValid] = useState(false)
   const [formErrorMessage, setFormErrorMessage] = useState('')
   const [correctAnswers, setCorrectAnswers]: [ICorrectAnswers, Function] = useState({})
 
@@ -108,38 +88,31 @@ const Constructor: React.FC = () => {
       // set default constructor state
       setFormControls(InitialFormControls)
       setFormErrorMessage('')
-      setFormIsValid(false)
       setCorrectAnswers({})
       setQuestionType('single')
     } else {
       // set constructor state with saved question
       const { correct, type, text, options } = questions[currentQuestion]
       setFormErrorMessage('')
-      setFormIsValid(true)
       setCorrectAnswers(correct)
       setQuestionType(type)
       setFormControls({
         ...InitialFormControls,
         question: {
           ...InitialFormControls.question,
-          inputs: InitialFormControls['question'].inputs.map(inputControls => {
-            return createFormControls({
-              ...inputControls,
-              value: text,
-              valid: true,
-            })[0]
-          })
+          value: text,
+          isValid: true,
         },
-        answerOptions: {
-          ...InitialFormControls.question,
-          inputs: InitialFormControls['answerOptions'].inputs.map((inputControls, index) => {
-            return createFormControls({
-              ...inputControls,
-              value: options[index].text,
-              valid: true,
-            })[0]
-          })
-        }
+        // answerOptions: {
+        //   ...InitialFormControls.answerOptions,
+        //   inputs: InitialFormControls['answerOptions'].inputs.map((inputControls, index) => {
+        //     return createFormControls({
+        //       ...inputControls,
+        //       value: options[index].text,
+        //       valid: true,
+        //     })[0]
+        //   })
+        // }
       })
     }
   }, [currentQuestion, quizName])
@@ -296,38 +269,9 @@ const Constructor: React.FC = () => {
     }
   }
 
-
-  const onInputChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    controlName: string,
-    controlsForValidate: string[],
-    index: number,
-  ): void => {
-    setFormControls((prev) => {
-      const newFormControls = { ...prev };
-      const newControls = { ...newFormControls[controlName] };
-      const newCurrInputControls = { ...newControls.inputs[index] };
-
-      newCurrInputControls.value = event.target.value;
-      newCurrInputControls.touched = true
-      const { isValid, errorMessage } = validateInput(newCurrInputControls.value, newCurrInputControls.validation)
-      newCurrInputControls.valid = isValid
-      newCurrInputControls.errorMessage = errorMessage
-
-      newControls.inputs[index] = newCurrInputControls;
-      newFormControls[controlName] = newControls;
-
-      if (formErrorMessage) {
-        setFormErrorMessage('')
-      }
-      setFormIsValid(checkAllInputsOnValid(newFormControls, controlsForValidate))
-
-      return newFormControls;
-    });
-  };
-
   const onTypeSelectChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     setQuestionType(event.target.value)
+    setCorrectAnswers({})
   }
 
   const onCurrentQuestionSelectChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -338,6 +282,7 @@ const Constructor: React.FC = () => {
   }
 
   const onCorrectInputChangeHandler = (event?: React.ChangeEvent<HTMLInputElement>): void => {
+    // todo переписать
     const correctAnswersInputs = document.querySelectorAll('.input[name="correctAnswer"]:checked')
     const newCorrectAnswers: ICorrectAnswers = {}
 
@@ -346,75 +291,12 @@ const Constructor: React.FC = () => {
     })
 
     setCorrectAnswers(newCorrectAnswers)
-  }
 
-
-  // mark correct answer by pressing "Enter" while input was focused
-  const formOnKeyPressHandler = (e:KeyboardEvent) => {
-    if (e.key === 'Enter' && focusedInput.isFocused) {
-      const inputNumber = focusedInput.target!.id.match(/\d/)![0]
-
-      const radioInput:any = document.querySelector(`input[name="correctAnswer"][value="${inputNumber}"]`)
-      radioInput!.checked = !correctAnswers[inputNumber]
-      onCorrectInputChangeHandler()
-    }
-  }
-
-  const formOnFocusHandler = (e:any) => {
-    const target = e.target
-    if (target.tagName === 'INPUT' && target.name === 'answerOpt') {
-      setFocusedInput({
-        isFocused: true,
-        target,
-      })
-    }
-  }
-
-  const formOnBlurHandler = (e:any) => {
-    const relatedTarget:any = e.relatedTarget
-    if (!(relatedTarget?.tagName === 'INPUT' && relatedTarget?.name === 'answerOpt')) {
-      setFocusedInput({
-        IsFocused: false,
-        target: null
-      })
-    }
-  }
-
-
-
-
-  const renderInputs = (controlName: string, inputControls: renderInputControls, controlsForValidate: string[]): React.ReactElement[] => {
-    return inputControls.inputs.map((controls, index) => (
-      <React.Fragment key={index}>
-        {inputControls.title && index === 0 && <p className="text tal">{inputControls.title}</p>}
-        <div className='quizConstructor__answerOption' >
-          {
-            controlName === 'answerOptions'
-            && <Input
-              checked={correctAnswers[index + 1] || false}
-              type={questionType === 'multiple' ? 'checkbox' : 'radio'}
-              className='quizConstructor__radioInput'
-              id={`radio-${index + 1}`}
-              name='correctAnswer'
-              onChange={onCorrectInputChangeHandler}
-              value={`${index + 1}`}
-            />
-          }
-
-          <Input
-            {...controls}
-            id={`answerOption-${index + 1}`}
-            shouldValidate={!!controls.validation}
-            onChange={(event) => onInputChangeHandler(event, controlName, controlsForValidate, index)}
-          />
-        </div>
-      </React.Fragment>
-    ))
   }
 
   return (
     <>
-      <h1 className='text title' >Создание теста</h1>
+      <Title text='Создание теста' />
       {questions.length > 0
         && <Select
           value={currentQuestion}
@@ -431,15 +313,11 @@ const Constructor: React.FC = () => {
           onSubmit={event => { event.preventDefault() }} 
           ref={formEl} 
           id="constructorForm"
-          onFocus={formOnFocusHandler}
-          onBlur={formOnBlurHandler}
-          onKeyPress={formOnKeyPressHandler}
         >
           {!quizName
 
-            /* если нет названия теста, выводится окно с инпутом для названия */
             ? <>
-              {renderInputs('quizName', formControls['quizName'], ['quizName'])}
+              <Input {...quizNameField} onChange={quizNameField.setState} />
 
               {
                 formErrorMessage
@@ -451,7 +329,6 @@ const Constructor: React.FC = () => {
               </div>
             </>
 
-            /* после того, как ввел название создаешь вопросы к тесту */
             : <>
               <Select
                 labelText='Тип вопроса'
@@ -462,8 +339,7 @@ const Constructor: React.FC = () => {
                   { value: 'multiple', text: 'Несколько правильных ответов' },
                 ]}
               />
-              {renderInputs('question', formControls['question'], ['question', 'answerOptions'])}
-              {renderInputs('answerOptions', formControls['answerOptions'], ['question', 'answerOptions'])}
+              <Input {...question} onChange={question.setState} />
 
               {
                 formErrorMessage

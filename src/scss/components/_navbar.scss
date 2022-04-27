@@ -1,7 +1,7 @@
 @import '../vars';
 
 .sidebar {
-	position: sticky;
+	position: fixed;
 	top: $headerPosTop;
 	left: $headerPosLeft;
 	bottom: $headerPosBot;
@@ -17,7 +17,7 @@
 	overflow-x: hidden;
 	overflow-y: hidden;
 	z-index: 499;
-	transition: width 0.5s;
+	transition: width 0.5s ease;
 }
 
 .navigation {
@@ -134,11 +134,13 @@
 }
 
 .main__content {
-	padding: 16px 16px 16px ($headerPosLeft + 16px);
-	width: calc(100% - 75px); // $headerMinWidth + border
-	transition: padding 0.5s, width 0.5s;
+	padding: 16px 16px 16px ($headerPosLeft + $headerMinWidth + 16px);
+	width: 100%; // $headerMinWidth + border
+	min-height: 100vh;
+	height: 100%;
+	transition: padding 0.5s ease;
 }
 
 .sidebar:hover ~ .main__content {
-	width: calc(100% - 305px); // $headerMaxWidth + border
+	padding: 16px 16px 16px ($headerPosLeft + $headerMaxWidth + 16px);
 }
